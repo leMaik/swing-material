@@ -291,6 +291,6 @@ public class MaterialColor {
     public static final Color MIN_BLACK = new Color(0, 0, 0, 0.26f);
     public static final Color FAINT_BLACK = new Color(0, 0, 0, 0.12f);
     public static final Color FULLWHITE = Color.WHITE;
-    public static final Color DARK_WHITE = new Color(255, 255, 255, 0.87f);
-    public static final Color LIGHT_WHITE = new Color(255, 255, 255, 0.54f);
+    public static final Color DARK_WHITE = new Color(1, 1, 1, 0.87f);
+    public static final Color LIGHT_WHITE = new Color(1, 1, 1, 0.54f);
 }
