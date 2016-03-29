@@ -141,7 +141,7 @@ public class MaterialButton extends JButton {
             g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - offset_lr, getHeight() - offset_td, 3, 3));
         }
 
-        FontMetrics metrics = g.getFontMetrics();
+        FontMetrics metrics = g.getFontMetrics(getFont());
         int x = (getWidth() - offset_lr - metrics.stringWidth(getText())) / 2;
         int y = ((getHeight() - offset_td - metrics.getHeight()) / 2) + metrics.getAscent();
         g2.setFont(getFont());
