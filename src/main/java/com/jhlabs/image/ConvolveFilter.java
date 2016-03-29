@@ -13,6 +13,7 @@ import java.awt.image.Kernel;
 
 /**
  * A filter which applies a convolution kernel to an image.
+ *
  * @author Jerry Huxtable
  */
 public class ConvolveFilter extends AbstractBufferedImageOp {
@@ -36,6 +37,7 @@ public class ConvolveFilter extends AbstractBufferedImageOp {
 
     /**
      * Construct a filter with the given 3x3 kernel.
+     *
      * @param matrix an array of 9 floats containing the kernel
      */
     public ConvolveFilter(float[] matrix) {
@@ -44,9 +46,10 @@ public class ConvolveFilter extends AbstractBufferedImageOp {
 
     /**
      * Construct a filter with the given kernel.
-     * @param rows    the number of rows in the kernel
-     * @param cols    the number of columns in the kernel
-     * @param matrix    an array of rows*cols floats containing the kernel
+     *
+     * @param rows   the number of rows in the kernel
+     * @param cols   the number of columns in the kernel
+     * @param matrix an array of rows*cols floats containing the kernel
      */
     public ConvolveFilter(int rows, int cols, float[] matrix) {
         this(new Kernel(cols, rows, matrix));
@@ -54,7 +57,8 @@ public class ConvolveFilter extends AbstractBufferedImageOp {
 
     /**
      * Construct a filter with the given 3x3 kernel.
-     * @param matrix an array of 9 floats containing the kernel
+     *
+     * @param kernel the kernel
      */
     public ConvolveFilter(Kernel kernel) {
         this.kernel = kernel;

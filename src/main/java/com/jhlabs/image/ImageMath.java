@@ -8,7 +8,6 @@ package com.jhlabs.image;
  * A class containing static math methods useful for image processing.
  */
 public class ImageMath {
-
     public final static float PI = (float) Math.PI;
     public final static float HALF_PI = (float) Math.PI / 2.0f;
     public final static float QUARTER_PI = (float) Math.PI / 4.0f;
@@ -17,6 +16,7 @@ public class ImageMath {
     /**
      * Apply a bias to a number in the unit interval, moving numbers towards 0 or 1
      * according to the bias parameter.
+     *
      * @param a the number to bias
      * @param b the bias parameter. 0.5 means no change, smaller values bias towards 0, larger towards 1.
      * @return the output value
@@ -28,6 +28,7 @@ public class ImageMath {
 
     /**
      * A variant of the gamma function.
+     *
      * @param a the number to apply gain to
      * @param b the gain parameter. 0.5 means no change, smaller values reduce gain, larger values increase gain.
      * @return the output value
@@ -54,6 +55,7 @@ public class ImageMath {
 
     /**
      * The step function. Returns 0 below a threshold, 1 above.
+     *
      * @param a the threshold position
      * @param x the input parameter
      * @return the output value - 0 or 1
@@ -64,6 +66,7 @@ public class ImageMath {
 
     /**
      * The pulse function. Returns 1 between two thresholds, 0 outside.
+     *
      * @param a the lower threshold position
      * @param b the upper threshold position
      * @param x the input parameter
@@ -75,11 +78,12 @@ public class ImageMath {
 
     /**
      * A smoothed pulse function. A cubic function is used to smooth the step between two thresholds.
+     *
      * @param a1 the lower threshold position for the start of the pulse
      * @param a2 the upper threshold position for the start of the pulse
      * @param b1 the lower threshold position for the end of the pulse
      * @param b2 the upper threshold position for the end of the pulse
-     * @param x the input parameter
+     * @param x  the input parameter
      * @return the output value
      */
     public static float smoothPulse(float a1, float a2, float b1, float b2, float x) {
@@ -97,6 +101,7 @@ public class ImageMath {
 
     /**
      * A smoothed step function. A cubic function is used to smooth the step between two thresholds.
+     *
      * @param a the lower threshold position
      * @param b the upper threshold position
      * @param x the input parameter
@@ -113,6 +118,7 @@ public class ImageMath {
 
     /**
      * A "circle up" function. Returns y on a unit circle given 1-x. Useful for forming bevels.
+     *
      * @param x the input parameter in the range 0..1
      * @return the output value
      */
@@ -123,6 +129,7 @@ public class ImageMath {
 
     /**
      * A "circle down" function. Returns 1-y on a unit circle given x. Useful for forming bevels.
+     *
      * @param x the input parameter in the range 0..1
      * @return the output value
      */
@@ -132,6 +139,7 @@ public class ImageMath {
 
     /**
      * Clamp a value to an interval.
+     *
      * @param a the lower clamp threshold
      * @param b the upper clamp threshold
      * @param x the input parameter
@@ -143,6 +151,7 @@ public class ImageMath {
 
     /**
      * Clamp a value to an interval.
+     *
      * @param a the lower clamp threshold
      * @param b the upper clamp threshold
      * @param x the input parameter
@@ -154,6 +163,7 @@ public class ImageMath {
 
     /**
      * Return a mod b. This differs from the % operator with respect to negative numbers.
+     *
      * @param a the dividend
      * @param b the divisor
      * @return a mod b
@@ -169,6 +179,7 @@ public class ImageMath {
 
     /**
      * Return a mod b. This differs from the % operator with respect to negative numbers.
+     *
      * @param a the dividend
      * @param b the divisor
      * @return a mod b
@@ -184,6 +195,7 @@ public class ImageMath {
 
     /**
      * Return a mod b. This differs from the % operator with respect to negative numbers.
+     *
      * @param a the dividend
      * @param b the divisor
      * @return a mod b
@@ -199,6 +211,7 @@ public class ImageMath {
 
     /**
      * The triangle function. Returns a repeating triangle shape in the range 0..1 with wavelength 1.0
+     *
      * @param x the input parameter
      * @return the output value
      */
@@ -209,6 +222,7 @@ public class ImageMath {
 
     /**
      * Linear interpolation.
+     *
      * @param t the interpolation parameter
      * @param a the lower interpolation range
      * @param b the upper interpolation range
@@ -220,6 +234,7 @@ public class ImageMath {
 
     /**
      * Linear interpolation.
+     *
      * @param t the interpolation parameter
      * @param a the lower interpolation range
      * @param b the upper interpolation range
@@ -231,7 +246,8 @@ public class ImageMath {
 
     /**
      * Linear interpolation of ARGB values.
-     * @param t the interpolation parameter
+     *
+     * @param t    the interpolation parameter
      * @param rgb1 the lower interpolation range
      * @param rgb2 the upper interpolation range
      * @return the interpolated value
@@ -254,9 +270,10 @@ public class ImageMath {
 
     /**
      * Bilinear interpolation of ARGB values.
+     *
      * @param x the X interpolation parameter 0..1
      * @param y the y interpolation parameter 0..1
-     * @param rgb array of four ARGB values in the order NW, NE, SW, SE
+     * @param p array of four ARGB values in the order NW, NE, SW, SE
      * @return the interpolated value
      */
     public static int bilinearInterpolate(float x, float y, int[] p) {
@@ -302,7 +319,8 @@ public class ImageMath {
 
     /**
      * Return the NTSC gray level of an RGB value.
-     * @param rgb1 the input pixel
+     *
+     * @param rgb the input pixel
      * @return the gray level (0-255)
      */
     public static int brightnessNTSC(int rgb) {
@@ -332,9 +350,10 @@ public class ImageMath {
 
     /**
      * Compute a Catmull-Rom spline.
-     * @param x the input parameter
+     *
+     * @param x        the input parameter
      * @param numKnots the number of knots in the spline
-     * @param knots the array of knots
+     * @param knots    the array of knots
      * @return the spline value
      */
     public static float spline(float x, int numKnots, float[] knots) {
@@ -367,10 +386,11 @@ public class ImageMath {
 
     /**
      * Compute a Catmull-Rom spline, but with variable knot spacing.
-     * @param x the input parameter
+     *
+     * @param x        the input parameter
      * @param numKnots the number of knots in the spline
-     * @param xknots the array of knot x values
-     * @param yknots the array of knot y values
+     * @param xknots   the array of knot x values
+     * @param yknots   the array of knot y values
      * @return the spline value
      */
     public static float spline(float x, int numKnots, int[] xknots, int[] yknots) {
@@ -409,9 +429,10 @@ public class ImageMath {
 
     /**
      * Compute a Catmull-Rom spline for RGB values.
-     * @param x the input parameter
+     *
+     * @param x        the input parameter
      * @param numKnots the number of knots in the spline
-     * @param knots the array of knots
+     * @param knots    the array of knots
      * @return the spline value
      */
     public static int colorSpline(float x, int numKnots, int[] knots) {
@@ -455,10 +476,11 @@ public class ImageMath {
 
     /**
      * Compute a Catmull-Rom spline for RGB values, but with variable knot spacing.
-     * @param x the input parameter
+     *
+     * @param x        the input parameter
      * @param numKnots the number of knots in the spline
-     * @param xknots the array of knot x values
-     * @param yknots the array of knot y values
+     * @param xknots   the array of knot x values
+     * @param yknots   the array of knot y values
      * @return the spline value
      */
     public static int colorSpline(int x, int numKnots, int[] xknots, int[] yknots) {
@@ -508,12 +530,13 @@ public class ImageMath {
 
     /**
      * An implementation of Fant's resampling algorithm.
+     *
      * @param source the source pixels
-     * @param dest the destination pixels
+     * @param dest   the destination pixels
      * @param length the length of the scanline to resample
      * @param offset the start offset into the arrays
      * @param stride the offset between pixels in consecutive rows
-     * @param out an array of output positions for each pixel
+     * @param out    an array of output positions for each pixel
      */
     public static void resample(int[] source, int[] dest, int length, int offset, int stride, float[] out) {
         int i, j;
