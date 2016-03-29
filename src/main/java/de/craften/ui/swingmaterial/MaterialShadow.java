@@ -10,7 +10,10 @@ import java.awt.image.BufferedImage;
  * A renderer for Material shadow.
  */
 public class MaterialShadow {
-    private static final int offset = 10;
+    public static final int OFFSET_TOP = 10;
+    public static final int OFFSET_LEFT = 20;
+    public static final int OFFSET_BOTTOM = 20;
+    public static final int OFFSET_RIGHT = 20;
 
     public static BufferedImage renderShadow(int width, int height, int level) {
         BufferedImage shadow = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -52,7 +55,7 @@ public class MaterialShadow {
         BufferedImage shadow = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = shadow.createGraphics();
         g2.setColor(new Color(0, 0, 0, opacity));
-        g2.fill(new RoundRectangle2D.Float(offset, offset, shadow.getWidth() - 2 * offset, shadow.getHeight() - 2 * offset, 3, 3));
+        g2.fill(new RoundRectangle2D.Float(OFFSET_LEFT, OFFSET_TOP, shadow.getWidth() - OFFSET_LEFT - OFFSET_RIGHT, shadow.getHeight() - OFFSET_TOP - OFFSET_BOTTOM, 3, 3));
         g2.dispose();
         return new GaussianFilter(radius).filter(shadow, shadow);
     }
