@@ -6,7 +6,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
-import java.awt.image.BufferedImage;
 
 /**
  * A Material Design button.
@@ -15,12 +14,15 @@ import java.awt.image.BufferedImage;
  */
 public class MaterialButton extends JButton {
     private RippleEffect ripple;
-    private BufferedImage shadow;
+    private ElevationEffect elevation;
     private boolean raised = false;
     private boolean isMousePressed = false;
+    private boolean isMouseOver = false;
 
     public MaterialButton() {
         ripple = RippleEffect.applyTo(this);
+        elevation = ElevationEffect.applyTo(this);
+
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent mouseEvent) {
@@ -32,6 +34,18 @@ public class MaterialButton extends JButton {
                 isMousePressed = false;
                 repaint();
             }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                isMouseOver = true;
+                repaint();
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                isMouseOver = false;
+                repaint();
+            }
         });
 
         setFont(Roboto.MEDIUM.deriveFont(14f));
@@ -40,19 +54,29 @@ public class MaterialButton extends JButton {
     @Override
     public void setEnabled(boolean b) {
         super.setEnabled(b);
-        shadow = null;
+        elevation.elevateTo(getElevation());
     }
 
     @Override
     protected void processFocusEvent(FocusEvent focusEvent) {
         super.processFocusEvent(focusEvent);
-        shadow = null;
+        elevation.elevateTo(getElevation());
     }
 
     @Override
     protected void processMouseEvent(MouseEvent mouseEvent) {
         super.processMouseEvent(mouseEvent);
-        shadow = null;
+        elevation.elevateTo(getElevation());
+    }
+
+    private int getElevation() {
+        if (isMousePressed) {
+            return 2;
+        } else if (isRaised() || isFocusOwner() || isMouseOver) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     @Override
@@ -63,16 +87,7 @@ public class MaterialButton extends JButton {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-        if (isEnabled()) {
-            if (shadow == null || shadow.getWidth() != getWidth() || shadow.getHeight() != getHeight()) {
-                if (isMousePressed) {
-                    shadow = MaterialShadow.renderShadow(getWidth(), getHeight(), 3);
-                } else if (isFocusOwner() || isRaised()) {
-                    shadow = MaterialShadow.renderShadow(getWidth(), getHeight(), 1);
-                }
-            }
-            g2.drawImage(shadow, 0, 0, null);
-        }
+        elevation.paint(g);
 
         g2.translate(MaterialShadow.OFFSET_LEFT, MaterialShadow.OFFSET_TOP);
 
@@ -121,7 +136,6 @@ public class MaterialButton extends JButton {
 
     public void setRaised(boolean raised) {
         this.raised = raised;
-        shadow = null;
         repaint();
     }
 }
