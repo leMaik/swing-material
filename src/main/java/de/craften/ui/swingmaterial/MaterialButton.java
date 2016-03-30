@@ -54,19 +54,19 @@ public class MaterialButton extends JButton {
     @Override
     public void setEnabled(boolean b) {
         super.setEnabled(b);
-        elevation.elevateTo(getElevation());
+        elevation.setLevel(getElevation());
     }
 
     @Override
     protected void processFocusEvent(FocusEvent focusEvent) {
         super.processFocusEvent(focusEvent);
-        elevation.elevateTo(getElevation());
+        elevation.setLevel(getElevation());
     }
 
     @Override
     protected void processMouseEvent(MouseEvent mouseEvent) {
         super.processMouseEvent(mouseEvent);
-        elevation.elevateTo(getElevation());
+        elevation.setLevel(getElevation());
     }
 
     private int getElevation() {

@@ -17,18 +17,23 @@ public class ElevationEffect {
     private final JComponent target;
     private Animator animator;
     private double level = 0;
-    private double targetLevel = 0;
+    private int targetLevel = 0;
 
-    private ElevationEffect(final JComponent component) {
+    private ElevationEffect(final JComponent component, int level) {
         this.target = component;
 
         timer = new SwingTimerTimingSource();
         timer.init();
 
-        this.animator = null;
+        this.level = level;
+        this.targetLevel = level;
     }
 
-    public void elevateTo(int level) {
+    public int getLevel() {
+        return targetLevel;
+    }
+
+    public void setLevel(int level) {
         if (animator != null) {
             if (level != targetLevel) {
                 animator.stop();
@@ -36,7 +41,7 @@ public class ElevationEffect {
                         .setDuration(500, TimeUnit.MILLISECONDS)
                         .setEndBehavior(Animator.EndBehavior.HOLD)
                         .setInterpolator(new SplineInterpolator(0.55, 0, 0.1, 1))
-                        .addTarget(PropertySetter.getTarget(this, "level", this.level, (double) level))
+                        .addTarget(PropertySetter.getTarget(this, "actualLevel", this.level, (double) level))
                         .build();
                 animator.start();
             }
@@ -45,7 +50,7 @@ public class ElevationEffect {
                     .setDuration(500, TimeUnit.MILLISECONDS)
                     .setEndBehavior(Animator.EndBehavior.HOLD)
                     .setInterpolator(new SplineInterpolator(0.55, 0, 0.1, 1))
-                    .addTarget(PropertySetter.getTarget(this, "level", this.level, (double) level))
+                    .addTarget(PropertySetter.getTarget(this, "actualLevel", this.level, (double) level))
                     .build();
             animator.start();
         }
@@ -53,12 +58,12 @@ public class ElevationEffect {
     }
 
     @Deprecated
-    public double getLevel() {
+    public double getActualLevel() {
         return level;
     }
 
     @Deprecated
-    public void setLevel(double level) {
+    public void setActualLevel(double level) {
         this.level = level;
         target.repaint();
     }
@@ -68,6 +73,10 @@ public class ElevationEffect {
     }
 
     public static ElevationEffect applyTo(JComponent target) {
-        return new ElevationEffect(target);
+        return applyTo(target, 0);
+    }
+
+    public static ElevationEffect applyTo(JComponent target, int level) {
+        return new ElevationEffect(target, level);
     }
 }
