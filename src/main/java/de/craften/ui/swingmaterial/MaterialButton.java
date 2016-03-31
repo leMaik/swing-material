@@ -147,4 +147,9 @@ public class MaterialButton extends JButton {
             ripple.paint(g2);
         }
     }
+
+    @Override
+    protected void paintBorder(Graphics g) {
+        //intentionally left blank
+    }
 }

@@ -106,4 +106,9 @@ public class MaterialPasswordField extends JPasswordField {
         g2.setColor(MaterialColor.CYAN_500);
         g2.fillRect((int) ((getWidth() - line.getWidth()) / 2), getHeight() - 10, (int) line.getWidth(), 2);
     }
+
+    @Override
+    protected void paintBorder(Graphics g) {
+        //intentionally left blank
+    }
 }
