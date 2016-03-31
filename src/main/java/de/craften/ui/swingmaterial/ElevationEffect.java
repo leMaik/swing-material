@@ -29,10 +29,20 @@ public class ElevationEffect {
         this.targetLevel = level;
     }
 
+    /**
+     * Gets the elevation level.
+     *
+     * @return elevation level (0..5)
+     */
     public int getLevel() {
         return targetLevel;
     }
 
+    /**
+     * Sets the elevation level.
+     *
+     * @param level elevation level (0..5)
+     */
     public void setLevel(int level) {
         if (animator != null) {
             if (level != targetLevel) {
@@ -68,14 +78,25 @@ public class ElevationEffect {
         target.repaint();
     }
 
+    /**
+     * Paints this effect.
+     *
+     * @param g canvas
+     */
     public void paint(Graphics g) {
         g.drawImage(MaterialShadow.renderShadow(target.getWidth(), target.getHeight(), level), 0, 0, null);
     }
 
-    public static ElevationEffect applyTo(JComponent target) {
-        return applyTo(target, 0);
-    }
 
+    /**
+     * Creates an elevation effect for the given component. You need to call {@link #paint(Graphics)} in your
+     * drawing method to actually paint this effect.
+     *
+     * @param target target component
+     * @param level  initial elevation level (0..5)
+     * @return elevation effect for that component
+     * @see MaterialButton for an example of how the ripple effect is used
+     */
     public static ElevationEffect applyTo(JComponent target, int level) {
         return new ElevationEffect(target, level);
     }

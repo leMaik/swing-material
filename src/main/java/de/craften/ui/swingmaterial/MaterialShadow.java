@@ -60,6 +60,14 @@ public class MaterialShadow {
             .addFrame(15f, 5 / 5.0)
             .build();
 
+    /**
+     * Creates an image containing shadow with the given width and height.
+     *
+     * @param width  width
+     * @param height height
+     * @param level  elevation level (0..5)
+     * @return shadow image
+     */
     public static BufferedImage renderShadow(int width, int height, double level) {
         if (level < 0 || level > 5) {
             throw new IllegalArgumentException("Shadow level must be between 1 and 5 (inclusive)");
@@ -82,6 +90,13 @@ public class MaterialShadow {
         return shadow;
     }
 
+    /**
+     * Creates an image containing circular shadow with the given radius.
+     *
+     * @param radius radius
+     * @param level  elevation level (0..5)
+     * @return shadow image
+     */
     public static BufferedImage renderCircularShadow(int radius, double level) {
         if (level < 0 || level > 5) {
             throw new IllegalArgumentException("Shadow level must be between 1 and 5 (inclusive)");

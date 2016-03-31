@@ -19,9 +19,12 @@ public class MaterialButton extends JButton {
     private boolean isMousePressed = false;
     private boolean isMouseOver = false;
 
+    /**
+     * Creates a new button.
+     */
     public MaterialButton() {
         ripple = RippleEffect.applyTo(this);
-        elevation = ElevationEffect.applyTo(this);
+        elevation = ElevationEffect.applyTo(this, 0);
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -49,6 +52,25 @@ public class MaterialButton extends JButton {
         });
 
         setFont(Roboto.MEDIUM.deriveFont(14f));
+    }
+
+    /**
+     * Checks if this button is raised.
+     *
+     * @return true if this button is raised, false if not
+     */
+    public boolean isRaised() {
+        return raised;
+    }
+
+    /**
+     * Sets if this button is raised.
+     *
+     * @param raised true if this button should be raised, false if not
+     */
+    public void setRaised(boolean raised) {
+        this.raised = raised;
+        repaint();
     }
 
     @Override
@@ -124,18 +146,5 @@ public class MaterialButton extends JButton {
             g2.setClip(new RoundRectangle2D.Float(0, 0, getWidth() - offset_lr, getHeight() - offset_td, 3, 3));
             ripple.paint(g2);
         }
-    }
-
-    @Override
-    protected void paintBorder(Graphics graphics) {
-    }
-
-    public boolean isRaised() {
-        return raised;
-    }
-
-    public void setRaised(boolean raised) {
-        this.raised = raised;
-        repaint();
     }
 }

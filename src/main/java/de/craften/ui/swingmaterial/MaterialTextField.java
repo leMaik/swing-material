@@ -21,10 +21,51 @@ public class MaterialTextField extends JTextField {
     private Line line = new Line(this);
     private String hint = "";
 
+    /**
+     * Creates a new text field.
+     */
     public MaterialTextField() {
         setBorder(null);
         setFont(Roboto.REGULAR.deriveFont(16f));
         floatingLabel.setText("");
+    }
+
+    /**
+     * Gets the text of the floating label.
+     *
+     * @return text of the floating label
+     */
+    public String getLabel() {
+        return floatingLabel.getText();
+    }
+
+    /**
+     * Sets the text of the floating label.
+     *
+     * @param label text of the floating label
+     */
+    public void setLabel(String label) {
+        floatingLabel.setText(label);
+        repaint();
+    }
+
+    /**
+     * Gets the hint text.
+     *
+     * @return hint text
+     */
+    public String getHint() {
+        return hint;
+    }
+
+    /**
+     * Sets the hint text.
+     *
+     * @param hint hint text
+     */
+    public void setHint(String hint) {
+        this.hint = hint;
+        repaint();
     }
 
     @Override
@@ -39,24 +80,6 @@ public class MaterialTextField extends JTextField {
         super.processKeyEvent(e);
         floatingLabel.update();
         line.update();
-    }
-
-    public String getLabel() {
-        return floatingLabel.getText();
-    }
-
-    public void setLabel(String label) {
-        floatingLabel.setText(label);
-        repaint();
-    }
-
-    public String getHint() {
-        return hint;
-    }
-
-    public void setHint(String hint) {
-        this.hint = hint;
-        repaint();
     }
 
     @Override

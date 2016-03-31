@@ -39,12 +39,17 @@ public class RippleEffect {
         });
     }
 
+    /**
+     * Paints this effect.
+     *
+     * @param g canvas
+     */
     public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         for (RippleAnimation rippleAnimation : ripples) {
-            float rippleOpacity = (float) rippleAnimation.getRippleOpacity();
-            Point rippleCenter = rippleAnimation.getRippleCenter();
-            int rippleRadius = rippleAnimation.getRippleRadius();
+            float rippleOpacity = (float) rippleAnimation.rippleOpacity;
+            Point rippleCenter = rippleAnimation.rippleCenter;
+            int rippleRadius = rippleAnimation.rippleRadius;
 
             Color fg = target.getForeground();
             g2.setColor(new Color(fg.getRed() / 255f, fg.getGreen() / 255f, fg.getBlue() / 255f, rippleOpacity));
@@ -52,6 +57,14 @@ public class RippleEffect {
         }
     }
 
+    /**
+     * Creates a ripple effect for the given component. You need to call {@link #paint(Graphics)} in your
+     * drawing method to actually paint this effect.
+     *
+     * @param target target component
+     * @return ripple effect for that component
+     * @see MaterialButton for an example of how the ripple effect is used
+     */
     public static RippleEffect applyTo(JComponent target) {
         return new RippleEffect(target);
     }
@@ -86,26 +99,26 @@ public class RippleEffect {
             rippleAnimator.start();
         }
 
+        @Deprecated
         public double getRippleOpacity() {
             return rippleOpacity;
         }
 
+        @Deprecated
         public void setRippleOpacity(double rippleOpacity) {
             this.rippleOpacity = rippleOpacity;
             target.repaint();
         }
 
+        @Deprecated
         public int getRippleRadius() {
             return rippleRadius;
         }
 
+        @Deprecated
         public void setRippleRadius(int rippleRadius) {
             this.rippleRadius = rippleRadius;
             target.repaint();
-        }
-
-        public Point getRippleCenter() {
-            return rippleCenter;
         }
     }
 }
