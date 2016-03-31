@@ -4,6 +4,7 @@ import de.craften.ui.swingmaterial.util.FastGaussianBlur;
 import org.jdesktop.core.animation.timing.KeyFrames;
 
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 
@@ -81,11 +82,42 @@ public class MaterialShadow {
         return shadow;
     }
 
+    public static BufferedImage renderCircularShadow(int radius, double level) {
+        if (level < 0 || level > 5) {
+            throw new IllegalArgumentException("Shadow level must be between 1 and 5 (inclusive)");
+        }
+
+        BufferedImage shadow = new BufferedImage(radius, radius + OFFSET_TOP + OFFSET_BOTTOM, BufferedImage.TYPE_INT_ARGB);
+        if (level != 0) {
+            BufferedImage shadow2 = new BufferedImage(radius, radius + OFFSET_TOP + OFFSET_BOTTOM, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = shadow.createGraphics();
+            g.setComposite(AlphaComposite.SrcOver);
+
+            makeCircularShadow(shadow, opacity1.getInterpolatedValueAt(level / 5), radius1.getInterpolatedValueAt(level / 5),
+                    0, offset1.getInterpolatedValueAt(level / 5));
+            makeCircularShadow(shadow2, opacity2.getInterpolatedValueAt(level / 5), radius2.getInterpolatedValueAt(level / 5),
+                    0, offset2.getInterpolatedValueAt(level / 5));
+            g.drawImage(shadow2, 0, 0, null);
+
+            g.dispose();
+        }
+        return shadow;
+    }
+
     private static void makeShadow(BufferedImage shadow, float opacity, float radius, float leftOffset, float topOffset) {
         Graphics2D g2 = shadow.createGraphics();
         g2.setColor(new Color(0, 0, 0, opacity));
         g2.fill(new RoundRectangle2D.Float(OFFSET_LEFT + leftOffset, OFFSET_TOP + topOffset,
                 shadow.getWidth() - OFFSET_LEFT - OFFSET_RIGHT, shadow.getHeight() - OFFSET_TOP - OFFSET_BOTTOM, 3, 3));
+        g2.dispose();
+        FastGaussianBlur.blur(shadow, radius);
+    }
+
+    private static void makeCircularShadow(BufferedImage shadow, float opacity, float radius, float leftOffset, float topOffset) {
+        Graphics2D g2 = shadow.createGraphics();
+        g2.setColor(new Color(0, 0, 0, opacity));
+        g2.fill(new Ellipse2D.Double(OFFSET_LEFT + leftOffset, OFFSET_TOP + topOffset,
+                shadow.getWidth() - OFFSET_LEFT - OFFSET_RIGHT, shadow.getWidth() - OFFSET_LEFT - OFFSET_RIGHT));
         g2.dispose();
         FastGaussianBlur.blur(shadow, radius);
     }
