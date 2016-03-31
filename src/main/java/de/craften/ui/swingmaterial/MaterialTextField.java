@@ -111,6 +111,9 @@ public class MaterialTextField extends JTextField {
         g2.fillRect((int) ((getWidth() - line.getWidth()) / 2), getHeight() - 10, (int) line.getWidth(), 2);
     }
 
+    /**
+     * An animated line below a text field.
+     */
     public static class Line {
         private final SwingTimerTimingSource timer;
         private final JComponent target;
@@ -137,7 +140,6 @@ public class MaterialTextField extends JTextField {
             animator.start();
         }
 
-        @Deprecated
         public double getWidth() {
             return width;
         }
@@ -149,6 +151,9 @@ public class MaterialTextField extends JTextField {
         }
     }
 
+    /**
+     * A floating label of a text field.
+     */
     public static class FloatingLabel {
         private final SwingTimerTimingSource timer;
         private final JTextField target;
