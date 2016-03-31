@@ -19,11 +19,12 @@ import java.util.concurrent.TimeUnit;
 public class MaterialTextField extends JTextField {
     private FloatingLabel floatingLabel = new FloatingLabel(this);
     private Line line = new Line(this);
+    private String hint = "";
 
     public MaterialTextField() {
         setBorder(null);
         setFont(Roboto.REGULAR.deriveFont(16f));
-        floatingLabel.setText("Label");
+        floatingLabel.setText("");
     }
 
     @Override
@@ -49,6 +50,15 @@ public class MaterialTextField extends JTextField {
         repaint();
     }
 
+    public String getHint() {
+        return hint;
+    }
+
+    public void setHint(String hint) {
+        this.hint = hint;
+        repaint();
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
@@ -61,6 +71,13 @@ public class MaterialTextField extends JTextField {
         g2.translate(0, 9);
         super.paintComponent(g);
         g2.translate(0, -9);
+
+        if (!getHint().isEmpty() && getText().isEmpty() && (getLabel().isEmpty() || isFocusOwner())) {
+            g.setFont(Roboto.REGULAR.deriveFont(16f));
+            g2.setColor(MaterialColor.MIN_BLACK);
+            FontMetrics metrics = g.getFontMetrics(g.getFont());
+            g.drawString(getHint(), 0, metrics.getAscent() + 36);
+        }
 
         floatingLabel.paint(g2);
 
