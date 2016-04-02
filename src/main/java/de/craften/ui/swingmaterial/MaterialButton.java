@@ -129,8 +129,8 @@ public class MaterialButton extends JButton {
         }
 
         FontMetrics metrics = g.getFontMetrics(getFont());
-        int x = (getWidth() - offset_lr - metrics.stringWidth(getText())) / 2;
-        int y = ((getHeight() - offset_td - metrics.getHeight()) / 2) + metrics.getAscent();
+        int x = (getWidth() - offset_lr - metrics.stringWidth(getText().toUpperCase())) / 2;
+        int y = (getHeight() - offset_td - metrics.getHeight()) / 2 + metrics.getAscent();
         g2.setFont(getFont());
         if (isEnabled()) {
             g2.setColor(getForeground());
