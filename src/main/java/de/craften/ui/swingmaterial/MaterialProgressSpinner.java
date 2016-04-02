@@ -14,7 +14,6 @@ import java.util.concurrent.TimeUnit;
  * @see <a href="https://www.google.com/design/spec/components/progress-activity.html">Progress &amp; activity (Google design guidelines)</a>
  */
 public class MaterialProgressSpinner extends JComponent {
-    private static final int DURATION = 1200;
     private int startArc = 270;
     private int arcSize = 0;
     private int rotation = 0;
@@ -24,26 +23,31 @@ public class MaterialProgressSpinner extends JComponent {
      * Creates a new progress spinner.
      */
     public MaterialProgressSpinner() {
+        //animation contants from https://github.com/PolymerElements/paper-spinner
+        final int ARCSIZE = 270;
+        final int ARCTIME = 1333;
+        final int ARCSTARTROT = 216;
+
         SwingTimerTimingSource timer = new SwingTimerTimingSource();
-        Animator animator = new Animator.Builder(timer)
-                .setDuration(DURATION, TimeUnit.MILLISECONDS)
+        Animator animator = new Animator.Builder(timer) //TODO bezier interpolation
+                .setDuration(4 * ARCTIME, TimeUnit.MILLISECONDS)
                 .setRepeatCount(Long.MAX_VALUE)
                 .setRepeatBehavior(Animator.RepeatBehavior.LOOP)
-                .addTarget(PropertySetter.getTarget(this, "startArc", 450, 135, 0))
+                .addTarget(PropertySetter.getTarget(this, "startArc", 0, -270, -270, -2 * 270, -2 * 270, -3 * 270, -3 * 270, -4 * 270, -4 * 270))
                 .build();
         animator.start();
-        Animator animator2 = new Animator.Builder(timer)
-                .setDuration(DURATION, TimeUnit.MILLISECONDS)
+        Animator animator2 = new Animator.Builder(timer) //TODO bezier interpolation
+                .setDuration(ARCTIME, TimeUnit.MILLISECONDS)
                 .setRepeatCount(Long.MAX_VALUE)
                 .setRepeatBehavior(Animator.RepeatBehavior.LOOP)
                 .addTarget(PropertySetter.getTarget(this, "arcSize", 0, 270, 0))
                 .build();
         animator2.start();
         Animator animator3 = new Animator.Builder(timer)
-                .setDuration(DURATION, TimeUnit.MILLISECONDS)
+                .setDuration(360 * ARCTIME / (ARCSTARTROT + (360 - ARCSIZE)), TimeUnit.MILLISECONDS)
                 .setRepeatCount(Long.MAX_VALUE)
                 .setRepeatBehavior(Animator.RepeatBehavior.LOOP)
-                .addTarget(PropertySetter.getTarget(this, "rotation", 270, 0))
+                .addTarget(PropertySetter.getTarget(this, "rotation", 360, 0))
                 .build();
         animator3.start();
         timer.init();
