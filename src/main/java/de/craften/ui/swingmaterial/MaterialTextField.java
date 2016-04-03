@@ -139,7 +139,7 @@ public class MaterialTextField extends JTextField {
             animator = new Animator.Builder(timer)
                     .setDuration(200, TimeUnit.MILLISECONDS)
                     .setEndBehavior(Animator.EndBehavior.HOLD)
-                    .setInterpolator(new SplineInterpolator(0.55, 0, 0.1, 1))
+                    .setInterpolator(new SplineInterpolator(0.4, 0, 0.2, 1))
                     .addTarget(PropertySetter.getTarget(this, "width", width, target.isFocusOwner() ? (double) target.getWidth() + 1 : 0d))
                     .build();
             animator.start();
@@ -181,7 +181,7 @@ public class MaterialTextField extends JTextField {
             Animator.Builder builder = new Animator.Builder(timer)
                     .setDuration(200, TimeUnit.MILLISECONDS)
                     .setEndBehavior(Animator.EndBehavior.HOLD)
-                    .setInterpolator(new SplineInterpolator(0.55, 0, 0.1, 1));
+                    .setInterpolator(new SplineInterpolator(0.4, 0, 0.2, 1));
             double targetFontSize = (target.isFocusOwner() || !target.getText().isEmpty()) ? 12d : 16d;
             if (fontSize != targetFontSize) {
                 builder.addTarget(PropertySetter.getTarget(this, "fontSize", fontSize, targetFontSize));
