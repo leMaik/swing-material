@@ -1,7 +1,9 @@
 package de.craften.ui.swingmaterial;
 
 import org.jdesktop.core.animation.timing.Animator;
+import org.jdesktop.core.animation.timing.Interpolator;
 import org.jdesktop.core.animation.timing.PropertySetter;
+import org.jdesktop.core.animation.timing.interpolators.SplineInterpolator;
 import org.jdesktop.swing.animation.timing.sources.SwingTimerTimingSource;
 
 import javax.swing.*;
@@ -29,18 +31,54 @@ public class MaterialProgressSpinner extends JComponent {
         final int ARCSTARTROT = 216;
 
         SwingTimerTimingSource timer = new SwingTimerTimingSource();
-        Animator animator = new Animator.Builder(timer) //TODO bezier interpolation
+        Animator animator = new Animator.Builder(timer)
                 .setDuration(4 * ARCTIME, TimeUnit.MILLISECONDS)
                 .setRepeatCount(Long.MAX_VALUE)
                 .setRepeatBehavior(Animator.RepeatBehavior.LOOP)
-                .addTarget(PropertySetter.getTarget(this, "startArc", 0, -270, -270, -2 * 270, -2 * 270, -3 * 270, -3 * 270, -4 * 270, -4 * 270))
+                .addTarget(PropertySetter.getTarget(this, "startArc", 0, -270, -2 * 270, -3 * 270, -4 * 270))
+                .setInterpolator(new Interpolator() {
+                    private final Interpolator spline = new SplineInterpolator(0.4, 0, 0.2, 1);
+
+                    @Override
+                    public double interpolate(double v) {
+                        if (v < 0.125) {
+                            return spline.interpolate(v * 8) / 4;
+                        } else if (v < 0.25) {
+                            return 0.25;
+                        } else if (v < 0.375) {
+                            return spline.interpolate((v - 0.25) * 8) / 4 + 0.25;
+                        } else if (v < 0.5) {
+                            return 0.5;
+                        } else if (v < 0.625) {
+                            return spline.interpolate((v - 0.5) * 8) / 4 + 0.5;
+                        } else if (v < 0.75) {
+                            return 0.75;
+                        } else if (v < 0.875) {
+                            return spline.interpolate((v - 0.75) * 8) / 4 + 0.75;
+                        } else {
+                            return 1;
+                        }
+                    }
+                })
                 .build();
         animator.start();
-        Animator animator2 = new Animator.Builder(timer) //TODO bezier interpolation
+        Animator animator2 = new Animator.Builder(timer)
                 .setDuration(ARCTIME, TimeUnit.MILLISECONDS)
                 .setRepeatCount(Long.MAX_VALUE)
                 .setRepeatBehavior(Animator.RepeatBehavior.LOOP)
                 .addTarget(PropertySetter.getTarget(this, "arcSize", 0, 270, 0))
+                .setInterpolator(new Interpolator() {
+                    private final Interpolator spline = new SplineInterpolator(0.4, 0, 0.2, 1);
+
+                    @Override
+                    public double interpolate(double v) {
+                        if (v < 0.5) {
+                            return spline.interpolate(v * 2) / 2;
+                        } else {
+                            return spline.interpolate((v - 0.5) * 2) / 2 + 0.5;
+                        }
+                    }
+                })
                 .build();
         animator2.start();
         Animator animator3 = new Animator.Builder(timer)
