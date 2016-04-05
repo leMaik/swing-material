@@ -68,12 +68,12 @@ public class RippleEffect {
      * @return ripple effect for that component
      * @see MaterialButton for an example of how the ripple effect is used
      */
-    public static RippleEffect applyTo(JComponent target) {
+    public static RippleEffect applyTo(final JComponent target) {
         final RippleEffect rippleEffect = new RippleEffect(target);
         target.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                rippleEffect.addRipple(e.getPoint(), 100);
+                rippleEffect.addRipple(e.getPoint(), target.getWidth());
             }
         });
         return rippleEffect;
