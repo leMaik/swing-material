@@ -63,6 +63,13 @@ public class MaterialPasswordField extends JPasswordField {
     }
 
     @Override
+    public void setText(String s) {
+        super.setText(s);
+        floatingLabel.update();
+        line.update();
+    }
+
+    @Override
     protected void processFocusEvent(FocusEvent e) {
         super.processFocusEvent(e);
         floatingLabel.update();
