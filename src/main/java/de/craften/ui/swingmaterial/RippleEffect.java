@@ -28,15 +28,6 @@ public class RippleEffect {
 
         timer = new SwingTimerTimingSource();
         timer.init();
-
-        component.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                final RippleAnimation ripple = new RippleAnimation(e.getPoint());
-                ripples.add(ripple);
-                ripple.start();
-            }
-        });
     }
 
     /**
@@ -53,8 +44,20 @@ public class RippleEffect {
 
             Color fg = target.getForeground();
             g2.setColor(new Color(fg.getRed() / 255f, fg.getGreen() / 255f, fg.getBlue() / 255f, rippleOpacity));
-            g2.fillOval(rippleCenter.x - MaterialShadow.OFFSET_LEFT - rippleRadius, rippleCenter.y - MaterialShadow.OFFSET_TOP - rippleRadius, 2 * rippleRadius, 2 * rippleRadius);
+            g2.fillOval(rippleCenter.x - rippleRadius, rippleCenter.y - rippleRadius, 2 * rippleRadius, 2 * rippleRadius);
         }
+    }
+
+    /**
+     * Adds a ripple at the given point.
+     *
+     * @param point     point to add the ripple at
+     * @param maxRadius the maximum radius of the ripple
+     */
+    public void addRipple(Point point, int maxRadius) {
+        final RippleAnimation ripple = new RippleAnimation(point, maxRadius);
+        ripples.add(ripple);
+        ripple.start();
     }
 
     /**
@@ -66,7 +69,33 @@ public class RippleEffect {
      * @see MaterialButton for an example of how the ripple effect is used
      */
     public static RippleEffect applyTo(JComponent target) {
-        return new RippleEffect(target);
+        final RippleEffect rippleEffect = new RippleEffect(target);
+        target.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                rippleEffect.addRipple(e.getPoint(), 100);
+            }
+        });
+        return rippleEffect;
+    }
+
+    /**
+     * Creates a ripple effect for the given component that is limited to the component's size and will always start
+     * in the center. You need to call {@link #paint(Graphics)} in your drawing method to actually paint this effect.
+     *
+     * @param target target component
+     * @return ripple effect for that component
+     * @see MaterialButton for an example of how the ripple effect is used
+     */
+    public static RippleEffect applyFixedTo(final JComponent target) {
+        final RippleEffect rippleEffect = new RippleEffect(target);
+        target.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                rippleEffect.addRipple(new Point(24, 24), target.getWidth() / 2);
+            }
+        });
+        return rippleEffect;
     }
 
     /**
@@ -74,20 +103,22 @@ public class RippleEffect {
      */
     public class RippleAnimation {
         private final Point rippleCenter;
+        private final int maxRadius;
         private int rippleRadius = 25;
         private double rippleOpacity = 0;
 
-        private RippleAnimation(Point rippleCenter) {
+        private RippleAnimation(Point rippleCenter, int maxRadius) {
             this.rippleCenter = rippleCenter;
+            this.maxRadius = maxRadius;
         }
 
         void start() {
-            rippleCenter.setLocation(rippleCenter);
+            //rippleCenter.setLocation(rippleCenter);
             Animator rippleAnimator = new Animator.Builder(timer)
                     .setDuration(1000, TimeUnit.MILLISECONDS)
                     .setEndBehavior(Animator.EndBehavior.HOLD)
                     .setInterpolator(new AccelerationInterpolator(0.2, 0.19))
-                    .addTarget(PropertySetter.getTarget(this, "rippleRadius", 0, 100, target.getWidth(), target.getWidth()))
+                    .addTarget(PropertySetter.getTarget(this, "rippleRadius", 0, maxRadius / 2, maxRadius, maxRadius))
                     .addTarget(PropertySetter.getTarget(this, "rippleOpacity", 0.0, 0.4, 0.3, 0.0))
                     .build();
             rippleAnimator.addTarget(new TimingTargetAdapter() {
