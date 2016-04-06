@@ -25,6 +25,7 @@ public class MaterialButton extends JButton {
     public MaterialButton() {
         ripple = RippleEffect.applyTo(this);
         elevation = ElevationEffect.applyTo(this, 0);
+        setOpaque(false);
 
         addMouseListener(new MouseAdapter() {
             @Override
