@@ -15,7 +15,7 @@ import java.awt.geom.RoundRectangle2D;
 public class MaterialButton extends JButton {
     private RippleEffect ripple;
     private ElevationEffect elevation;
-    private boolean raised = false;
+    private Type type = Type.DEFAULT;
     private boolean isMousePressed = false;
     private boolean isMouseOver = false;
 
@@ -56,21 +56,21 @@ public class MaterialButton extends JButton {
     }
 
     /**
-     * Checks if this button is raised.
+     * Gets the type of this button.
      *
-     * @return true if this button is raised, false if not
+     * @return the type of this button
      */
-    public boolean isRaised() {
-        return raised;
+    public Type getType() {
+        return type;
     }
 
     /**
-     * Sets if this button is raised.
+     * Sets the type of this button.
      *
-     * @param raised true if this button should be raised, false if not
+     * @param type the type of this button
      */
-    public void setRaised(boolean raised) {
-        this.raised = raised;
+    public void setType(Type type) {
+        this.type = type;
         repaint();
     }
 
@@ -95,7 +95,7 @@ public class MaterialButton extends JButton {
     private int getElevation() {
         if (isMousePressed) {
             return 2;
-        } else if (isRaised() || isFocusOwner() || isMouseOver) {
+        } else if (type == Type.RAISED || isFocusOwner() || isMouseOver) {
             return 1;
         } else {
             return 0;
@@ -108,8 +108,9 @@ public class MaterialButton extends JButton {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-        elevation.paint(g);
-
+        if (type != Type.FLAT) {
+            elevation.paint(g);
+        }
         g2.translate(MaterialShadow.OFFSET_LEFT, MaterialShadow.OFFSET_TOP);
 
         final int offset_lr = MaterialShadow.OFFSET_LEFT + MaterialShadow.OFFSET_RIGHT;
@@ -150,5 +151,23 @@ public class MaterialButton extends JButton {
     @Override
     protected void paintBorder(Graphics g) {
         //intentionally left blank
+    }
+
+    /**
+     * Button types.
+     */
+    public enum Type {
+        /**
+         * A default button.
+         */
+        DEFAULT,
+        /**
+         * A raised button. Raised buttons have shadow even if they are not focused.
+         */
+        RAISED,
+        /**
+         * A flat button. Flat buttons don't have shadows and are typically transparent.
+         */
+        FLAT
     }
 }
