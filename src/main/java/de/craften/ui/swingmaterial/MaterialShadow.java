@@ -74,7 +74,7 @@ public class MaterialShadow {
         }
 
         BufferedImage shadow = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        if (level != 0) {
+        if (width > 0 && height > 0 && level != 0) {
             BufferedImage shadow2 = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
             Graphics2D g = shadow.createGraphics();
             g.setComposite(AlphaComposite.SrcOver);
@@ -87,6 +87,7 @@ public class MaterialShadow {
 
             g.dispose();
         }
+
         return shadow;
     }
 
