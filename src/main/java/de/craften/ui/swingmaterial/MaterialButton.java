@@ -130,7 +130,10 @@ public class MaterialButton extends JButton {
             g2.setColor(getBackground());
             g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - offset_lr, getHeight() - offset_td, 3, 3));
 
-            if (isFocusOwner()) {
+            if (type == Type.FLAT && (isMouseOver || isFocusOwner())) {
+                g2.setColor(new Color(0, 0, 0, 0.12f));
+                g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - offset_lr, getHeight() - offset_td, 3, 3));
+            } else if (isFocusOwner()) {
                 g2.setColor(new Color(1, 1, 1, 0.2f));
                 g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - offset_lr, getHeight() - offset_td, 3, 3));
             }
