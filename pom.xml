@@ -7,8 +7,15 @@
     <name>swing-material</name>
     <groupId>de.craften.ui.swingmaterial</groupId>
     <artifactId>swing-material</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://github.com/leMaik/swing-material/blob/master/LICENSE</url>
+        </license>
+    </licenses>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
