@@ -1,7 +1,6 @@
 package de.craften.ui.swingmaterial;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.FocusEvent;
@@ -20,6 +19,7 @@ public class MaterialButton extends JButton {
     private Type type = Type.DEFAULT;
     private boolean isMousePressed = false;
     private boolean isMouseOver = false;
+    private Color rippleColor = Color.WHITE;
 
     /**
      * Creates a new button.
@@ -84,6 +84,24 @@ public class MaterialButton extends JButton {
         repaint();
     }
 
+    /**
+     * Gets the ripple color.
+     *
+     * @return the ripple color
+     */
+    public Color getRippleColor() {
+        return rippleColor;
+    }
+
+    /**
+     * Sets the ripple color. You should only do this for flat buttons.
+     *
+     * @param rippleColor the ripple color
+     */
+    public void setRippleColor(Color rippleColor) {
+        this.rippleColor = rippleColor;
+    }
+
     @Override
     public void setEnabled(boolean b) {
         super.setEnabled(b);
@@ -130,11 +148,8 @@ public class MaterialButton extends JButton {
             g2.setColor(getBackground());
             g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - offset_lr, getHeight() - offset_td, 3, 3));
 
-            if (type == Type.FLAT && (isMouseOver || isFocusOwner())) {
-                g2.setColor(new Color(0, 0, 0, 0.12f));
-                g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - offset_lr, getHeight() - offset_td, 3, 3));
-            } else if (isFocusOwner()) {
-                g2.setColor(new Color(1, 1, 1, 0.2f));
+            g2.setColor(new Color(rippleColor.getRed() / 255f, rippleColor.getBlue() / 255f, rippleColor.getBlue() / 255f, 0.12f));
+            if ((type == Type.FLAT && isMouseOver) || isFocusOwner()) {
                 g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - offset_lr, getHeight() - offset_td, 3, 3));
             }
         } else {
@@ -157,6 +172,7 @@ public class MaterialButton extends JButton {
 
         if (isEnabled()) {
             g2.setClip(new RoundRectangle2D.Float(0, 0, getWidth() - offset_lr, getHeight() - offset_td, 3, 3));
+            g2.setColor(rippleColor);
             ripple.paint(g2);
         }
     }
