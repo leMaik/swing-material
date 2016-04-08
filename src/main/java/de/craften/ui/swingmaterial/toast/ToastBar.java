@@ -7,8 +7,10 @@ import org.jdesktop.core.animation.timing.interpolators.SplineInterpolator;
 import org.jdesktop.swing.animation.timing.sources.SwingTimerTimingSource;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.TimeUnit;
@@ -93,26 +95,5 @@ public class ToastBar extends JComponent {
                     })
                     .build().start();
         }
-    }
-
-    public static void main(String[] args) {
-        JPanel content = new JPanel();
-        content.setLayout(new BorderLayout());
-        final ToastBar toastBar = new ToastBar();
-        toastBar.setPreferredSize(new Dimension(200, 48));
-        content.add(toastBar, BorderLayout.SOUTH);
-
-        content.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                toastBar.display(new TextToast("Hello!"));
-                System.out.println("Added toast");
-            }
-        });
-
-        JFrame window = new JFrame();
-        window.setContentPane(content);
-        window.setSize(200, 200);
-        window.setVisible(true);
     }
 }
