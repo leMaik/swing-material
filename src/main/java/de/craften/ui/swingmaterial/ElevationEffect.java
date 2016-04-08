@@ -87,7 +87,6 @@ public class ElevationEffect {
         Graphics2D g2 = (Graphics2D) g;
         g2.setBackground(target.getParent().getBackground());
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-        g2.clearRect(0, 0, target.getWidth(), target.getHeight());
         g.drawImage(MaterialShadow.renderShadow(target.getWidth(), target.getHeight(), level), 0, 0, null);
     }
 
