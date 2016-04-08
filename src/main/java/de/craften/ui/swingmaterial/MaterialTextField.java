@@ -6,6 +6,7 @@ import org.jdesktop.core.animation.timing.interpolators.SplineInterpolator;
 import org.jdesktop.swing.animation.timing.sources.SwingTimerTimingSource;
 
 import javax.swing.*;
+import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
@@ -28,6 +29,14 @@ public class MaterialTextField extends JTextField {
         setBorder(null);
         setFont(Roboto.REGULAR.deriveFont(16f));
         floatingLabel.setText("");
+
+        setCaret(new DefaultCaret() {
+            @Override
+            protected synchronized void damage(Rectangle r) {
+                MaterialTextField.this.repaint(); //fix caret not being removed completely
+            }
+        });
+        getCaret().setBlinkRate(500);
     }
 
     /**

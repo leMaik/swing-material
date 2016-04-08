@@ -1,6 +1,7 @@
 package de.craften.ui.swingmaterial;
 
 import javax.swing.*;
+import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
@@ -21,8 +22,16 @@ public class MaterialPasswordField extends JPasswordField {
     public MaterialPasswordField() {
         setBorder(null);
         setEchoChar('\u00B7');
-        setFont(Roboto.REGULAR.deriveFont(16f));
         floatingLabel.setText("");
+        setFont(Roboto.REGULAR.deriveFont(16f));
+
+        setCaret(new DefaultCaret() {
+            @Override
+            protected synchronized void damage(Rectangle r) {
+                MaterialPasswordField.this.repaint(); //fix caret not being removed completely
+            }
+        });
+        getCaret().setBlinkRate(500);
     }
 
     /**
