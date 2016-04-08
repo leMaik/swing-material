@@ -1,6 +1,8 @@
 package de.craften.ui.swingmaterial;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
@@ -53,6 +55,14 @@ public class MaterialButton extends JButton {
         });
 
         setFont(Roboto.MEDIUM.deriveFont(14f));
+
+        setUI(new BasicButtonUI() {
+            @Override
+            public boolean contains(JComponent c, int x, int y) {
+                return x > MaterialShadow.OFFSET_LEFT && y > MaterialShadow.OFFSET_TOP
+                        && x < getWidth() - MaterialShadow.OFFSET_RIGHT && y < getHeight() - MaterialShadow.OFFSET_BOTTOM;
+            }
+        });
     }
 
     /**
@@ -147,6 +157,7 @@ public class MaterialButton extends JButton {
             ripple.paint(g2);
         }
     }
+
 
     @Override
     protected void paintBorder(Graphics g) {
