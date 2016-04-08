@@ -21,9 +21,7 @@ public class MaterialPasswordField extends JPasswordField {
      */
     public MaterialPasswordField() {
         setBorder(null);
-        setEchoChar('\u00B7');
         floatingLabel.setText("");
-        setFont(Roboto.REGULAR.deriveFont(16f));
 
         setCaret(new DefaultCaret() {
             @Override
