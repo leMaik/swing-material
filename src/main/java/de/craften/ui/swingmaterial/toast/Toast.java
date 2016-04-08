@@ -13,7 +13,7 @@ public abstract class Toast extends JComponent {
     public static final Color BACKGROUND = Color.decode("#323232");
     public static final Font FONT = Roboto.REGULAR.deriveFont(14f);
     public static final int MAX_WIDTH = 568;
-    private double yOffset;
+    private double yOffset = Double.POSITIVE_INFINITY;
 
     public Toast() {
         setOpaque(false);

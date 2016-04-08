@@ -22,7 +22,6 @@ public class ToastBar extends JComponent {
     private final SwingTimerTimingSource timer;
     private Queue<Toast> toasts = new LinkedList<>();
     private Toast currentToast = null;
-    private double toastY;
     private boolean animationRunning = false;
 
     public ToastBar() {
@@ -78,8 +77,10 @@ public class ToastBar extends JComponent {
                     .addTarget(new TimingTargetAdapter() {
                         @Override
                         public void end(Animator source) {
-                            remove(currentToast);
-                            currentToast = null;
+                            if (currentToast != null) {
+                                remove(currentToast);
+                                currentToast = null;
+                            }
 
                             new javax.swing.Timer(1000, new ActionListener() {
                                 @Override
@@ -92,17 +93,6 @@ public class ToastBar extends JComponent {
                     })
                     .build().start();
         }
-    }
-
-    @Deprecated
-    public double getToastY() {
-        return toastY;
-    }
-
-    @Deprecated
-    public void setToastY(double toastY) {
-        this.toastY = toastY;
-        repaint();
     }
 
     public static void main(String[] args) {
