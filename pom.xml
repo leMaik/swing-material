@@ -7,7 +7,7 @@
     <name>swing-material</name>
     <groupId>de.craften.ui.swingmaterial</groupId>
     <artifactId>swing-material</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <packaging>jar</packaging>
 
     <licenses>
