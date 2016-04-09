@@ -21,6 +21,7 @@ public class MaterialPasswordField extends JPasswordField {
      */
     public MaterialPasswordField() {
         setBorder(null);
+        setFont(getFont().deriveFont(16f)); //use default font, Roboto's bullet doesn't work on some platforms (i.e. Mac)
         floatingLabel.setText("");
 
         setCaret(new DefaultCaret() {
