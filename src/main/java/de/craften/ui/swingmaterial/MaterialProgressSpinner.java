@@ -142,7 +142,7 @@ public class MaterialProgressSpinner extends JComponent {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setColor(getForeground());
-        g2.setStroke(new BasicStroke(5, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        g2.drawArc(5, 5, getWidth() - 10, getWidth() - 10, startArc + rotation + rotation2 + 90, arcSize);
+        g2.setStroke(new BasicStroke(5, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND));
+        g2.drawArc(5, 5, getWidth() - 10, getWidth() - 10, startArc + rotation + rotation2 + 90, Math.max(1, arcSize));
     }
 }
