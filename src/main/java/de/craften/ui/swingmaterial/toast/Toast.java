@@ -19,15 +19,8 @@ public abstract class Toast extends JComponent {
         setOpaque(false);
     }
 
-    @Deprecated
-    public double getYOffset() {
-        return yOffset;
-    }
-
-    @Deprecated
-    public void setYOffset(double yOffset) {
+    void setYOffset(double yOffset) {
         this.yOffset = yOffset;
-        repaint();
     }
 
     /**

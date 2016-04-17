@@ -1,8 +1,9 @@
 package de.craften.ui.swingmaterial;
 
 
+import de.craften.ui.swingmaterial.util.SafePropertySetter;
+import de.craften.ui.swingmaterial.util.SafePropertySetter.Property;
 import org.jdesktop.core.animation.timing.Animator;
-import org.jdesktop.core.animation.timing.PropertySetter;
 import org.jdesktop.core.animation.timing.TimingTargetAdapter;
 import org.jdesktop.core.animation.timing.interpolators.AccelerationInterpolator;
 import org.jdesktop.swing.animation.timing.sources.SwingTimerTimingSource;
@@ -38,9 +39,9 @@ public class RippleEffect {
     public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         for (RippleAnimation rippleAnimation : ripples) {
-            float rippleOpacity = (float) rippleAnimation.rippleOpacity;
+            float rippleOpacity = rippleAnimation.rippleOpacity.getValue().floatValue();
             Point rippleCenter = rippleAnimation.rippleCenter;
-            int rippleRadius = rippleAnimation.rippleRadius;
+            int rippleRadius = rippleAnimation.rippleRadius.getValue();
 
             Color fg = target.getForeground();
             g2.setColor(new Color(fg.getRed() / 255f, fg.getGreen() / 255f, fg.getBlue() / 255f, rippleOpacity));
@@ -104,8 +105,8 @@ public class RippleEffect {
     public class RippleAnimation {
         private final Point rippleCenter;
         private final int maxRadius;
-        private int rippleRadius = 25;
-        private double rippleOpacity = 0;
+        private final Property<Integer> rippleRadius = SafePropertySetter.animatableProperty(target, 25);
+        private final Property<Double> rippleOpacity = SafePropertySetter.animatableProperty(target, 0.0);
 
         private RippleAnimation(Point rippleCenter, int maxRadius) {
             this.rippleCenter = rippleCenter;
@@ -118,38 +119,16 @@ public class RippleEffect {
                     .setDuration(1000, TimeUnit.MILLISECONDS)
                     .setEndBehavior(Animator.EndBehavior.HOLD)
                     .setInterpolator(new AccelerationInterpolator(0.2, 0.19))
-                    .addTarget(PropertySetter.getTarget(this, "rippleRadius", 0, maxRadius / 2, maxRadius, maxRadius))
-                    .addTarget(PropertySetter.getTarget(this, "rippleOpacity", 0.0, 0.4, 0.3, 0.0))
+                    .addTarget(SafePropertySetter.getTarget(rippleRadius, 0, maxRadius / 2, maxRadius, maxRadius))
+                    .addTarget(SafePropertySetter.getTarget(rippleOpacity, 0.0, 0.4, 0.3, 0.0))
+                    .addTarget(new TimingTargetAdapter() {
+                        @Override
+                        public void end(Animator source) {
+                            ripples.remove(RippleAnimation.this);
+                        }
+                    })
                     .build();
-            rippleAnimator.addTarget(new TimingTargetAdapter() {
-                @Override
-                public void end(Animator source) {
-                    ripples.remove(RippleAnimation.this);
-                }
-            });
             rippleAnimator.start();
-        }
-
-        @Deprecated
-        public double getRippleOpacity() {
-            return rippleOpacity;
-        }
-
-        @Deprecated
-        public void setRippleOpacity(double rippleOpacity) {
-            this.rippleOpacity = rippleOpacity;
-            target.repaint();
-        }
-
-        @Deprecated
-        public int getRippleRadius() {
-            return rippleRadius;
-        }
-
-        @Deprecated
-        public void setRippleRadius(int rippleRadius) {
-            this.rippleRadius = rippleRadius;
-            target.repaint();
         }
     }
 }

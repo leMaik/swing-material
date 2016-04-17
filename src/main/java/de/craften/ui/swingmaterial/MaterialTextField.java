@@ -1,7 +1,7 @@
 package de.craften.ui.swingmaterial;
 
+import de.craften.ui.swingmaterial.util.SafePropertySetter;
 import org.jdesktop.core.animation.timing.Animator;
-import org.jdesktop.core.animation.timing.PropertySetter;
 import org.jdesktop.core.animation.timing.interpolators.SplineInterpolator;
 import org.jdesktop.swing.animation.timing.sources.SwingTimerTimingSource;
 
@@ -139,13 +139,13 @@ public class MaterialTextField extends JTextField {
         private final SwingTimerTimingSource timer;
         private final JComponent target;
         private Animator animator;
-        private double width;
+        private SafePropertySetter.Property<Double> width;
 
         Line(JComponent target) {
             this.target = target;
             this.timer = new SwingTimerTimingSource();
             timer.init();
-            width = 0;
+            width = SafePropertySetter.animatableProperty(target, 0d);
         }
 
         void update() {
@@ -156,19 +156,13 @@ public class MaterialTextField extends JTextField {
                     .setDuration(200, TimeUnit.MILLISECONDS)
                     .setEndBehavior(Animator.EndBehavior.HOLD)
                     .setInterpolator(new SplineInterpolator(0.4, 0, 0.2, 1))
-                    .addTarget(PropertySetter.getTarget(this, "width", width, target.isFocusOwner() ? (double) target.getWidth() + 1 : 0d))
+                    .addTarget(SafePropertySetter.getTarget(width, width.getValue(), target.isFocusOwner() ? (double) target.getWidth() + 1 : 0d))
                     .build();
             animator.start();
         }
 
         public double getWidth() {
-            return width;
-        }
-
-        @Deprecated
-        public void setWidth(double width) {
-            this.width = width;
-            target.repaint();
+            return width.getValue();
         }
     }
 
@@ -179,15 +173,19 @@ public class MaterialTextField extends JTextField {
         private final SwingTimerTimingSource timer;
         private final JTextField target;
         private Animator animator;
-        private double y = 36;
-        private double fontSize = 16;
-        private Color color = MaterialColor.MIN_BLACK;
+        private final SafePropertySetter.Property<Double> y;
+        private final SafePropertySetter.Property<Double> fontSize;
+        private final SafePropertySetter.Property<Color> color;
         private String text;
 
         FloatingLabel(JTextField target) {
             this.target = target;
             this.timer = new SwingTimerTimingSource();
             timer.init();
+
+            y = SafePropertySetter.animatableProperty(target, 36d);
+            fontSize = SafePropertySetter.animatableProperty(target, 16d);
+            color = SafePropertySetter.animatableProperty(target, MaterialColor.MIN_BLACK);
         }
 
         void update() {
@@ -199,12 +197,12 @@ public class MaterialTextField extends JTextField {
                     .setEndBehavior(Animator.EndBehavior.HOLD)
                     .setInterpolator(new SplineInterpolator(0.4, 0, 0.2, 1));
             double targetFontSize = (target.isFocusOwner() || !target.getText().isEmpty()) ? 12d : 16d;
-            if (fontSize != targetFontSize) {
-                builder.addTarget(PropertySetter.getTarget(this, "fontSize", fontSize, targetFontSize));
+            if (fontSize.getValue() != targetFontSize) {
+                builder.addTarget(SafePropertySetter.getTarget(fontSize, fontSize.getValue(), targetFontSize));
             }
             double targetY = target.isFocusOwner() || !target.getText().isEmpty() ? 16d : 36d;
-            if (Math.abs(targetY - y) > 0.1) {
-                builder.addTarget(PropertySetter.getTarget(this, "y", fontSize, targetY));
+            if (Math.abs(targetY - y.getValue()) > 0.1) {
+                builder.addTarget(SafePropertySetter.getTarget(y, y.getValue(), targetY));
             }
             Color targetColor;
             if (target.getText().isEmpty() && target.isFocusOwner()) {
@@ -216,8 +214,8 @@ public class MaterialTextField extends JTextField {
                     targetColor = MaterialColor.LIGHT_BLACK;
                 }
             }
-            if (!targetColor.equals(color)) {
-                builder.addTarget(PropertySetter.getTarget(this, "color", color, targetColor));
+            if (!targetColor.equals(color.getValue())) {
+                builder.addTarget(SafePropertySetter.getTarget(color, color.getValue(), targetColor));
             }
             animator = builder.build();
             animator.start();
@@ -231,44 +229,11 @@ public class MaterialTextField extends JTextField {
             this.text = text;
         }
 
-        @Deprecated
-        public double getY() {
-            return y;
-        }
-
-        @Deprecated
-        public void setY(double y) {
-            this.y = y;
-            target.repaint();
-        }
-
-        @Deprecated
-        public double getFontSize() {
-            return fontSize;
-        }
-
-        @Deprecated
-        public void setFontSize(double fontSize) {
-            this.fontSize = fontSize;
-            target.repaint();
-        }
-
-        @Deprecated
-        public Color getColor() {
-            return color;
-        }
-
-        @Deprecated
-        public void setColor(Color color) {
-            this.color = color;
-            target.repaint();
-        }
-
         void paint(Graphics2D g) {
-            g.setFont(Roboto.REGULAR.deriveFont((float) fontSize));
-            g.setColor(color);
+            g.setFont(Roboto.REGULAR.deriveFont(fontSize.getValue().floatValue()));
+            g.setColor(color.getValue());
             FontMetrics metrics = g.getFontMetrics(g.getFont());
-            g.drawString(getText(), 0, metrics.getAscent() + (int) y);
+            g.drawString(getText(), 0, metrics.getAscent() + y.getValue().intValue());
         }
     }
 }

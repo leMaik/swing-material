@@ -1,7 +1,7 @@
 package de.craften.ui.swingmaterial.toast;
 
+import de.craften.ui.swingmaterial.util.SafePropertySetter;
 import org.jdesktop.core.animation.timing.Animator;
-import org.jdesktop.core.animation.timing.PropertySetter;
 import org.jdesktop.core.animation.timing.TimingTargetAdapter;
 import org.jdesktop.core.animation.timing.interpolators.SplineInterpolator;
 import org.jdesktop.swing.animation.timing.sources.SwingTimerTimingSource;
@@ -68,14 +68,26 @@ public class ToastBar extends JComponent {
                     .setDuration(250, TimeUnit.MILLISECONDS)
                     .setEndBehavior(Animator.EndBehavior.HOLD)
                     .setInterpolator(new SplineInterpolator(0.1, 0.3, 0.45, 1))
-                    .addTarget(PropertySetter.getTarget(currentToast, "yOffset", getHeight(), 0))
+                    .addTarget(SafePropertySetter.getTarget(new SafePropertySetter.Setter<Integer>() {
+                        @Override
+                        public void setValue(Integer value) {
+                            currentToast.setYOffset(value);
+                            repaint();
+                        }
+                    }, getHeight(), 0))
                     .build().start();
             new Animator.Builder(timer)
                     .setStartDelay(250 + 3000, TimeUnit.MILLISECONDS)
                     .setDuration(250, TimeUnit.MILLISECONDS)
                     .setEndBehavior(Animator.EndBehavior.HOLD)
                     .setInterpolator(new SplineInterpolator(0.55, 0, 0.9, 0.7))
-                    .addTarget(PropertySetter.getTarget(currentToast, "yOffset", 0, getHeight() + 1))
+                    .addTarget(SafePropertySetter.getTarget(new SafePropertySetter.Setter<Integer>() {
+                        @Override
+                        public void setValue(Integer value) {
+                            currentToast.setYOffset(value);
+                            repaint();
+                        }
+                    }, 0, getHeight() + 1))
                     .addTarget(new TimingTargetAdapter() {
                         @Override
                         public void end(Animator source) {

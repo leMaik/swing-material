@@ -1,8 +1,9 @@
 package de.craften.ui.swingmaterial;
 
+import de.craften.ui.swingmaterial.util.SafePropertySetter;
+import de.craften.ui.swingmaterial.util.SafePropertySetter.Property;
 import org.jdesktop.core.animation.timing.Animator;
 import org.jdesktop.core.animation.timing.Interpolator;
-import org.jdesktop.core.animation.timing.PropertySetter;
 import org.jdesktop.core.animation.timing.interpolators.SplineInterpolator;
 import org.jdesktop.swing.animation.timing.sources.SwingTimerTimingSource;
 
@@ -16,10 +17,9 @@ import java.util.concurrent.TimeUnit;
  * @see <a href="https://www.google.com/design/spec/components/progress-activity.html">Progress &amp; activity (Google design guidelines)</a>
  */
 public class MaterialProgressSpinner extends JComponent {
-    private int startArc = 270;
-    private int arcSize = 0;
-    private int rotation = 0;
-    private int rotation2 = 0;
+    private final Property<Integer> startArc = SafePropertySetter.animatableProperty(this, 270);
+    private final Property<Integer> arcSize = SafePropertySetter.animatableProperty(this, 0);
+    private final Property<Integer> rotation = SafePropertySetter.animatableProperty(this, 0);
 
     /**
      * Creates a new progress spinner.
@@ -35,7 +35,7 @@ public class MaterialProgressSpinner extends JComponent {
                 .setDuration(4 * ARCTIME, TimeUnit.MILLISECONDS)
                 .setRepeatCount(Long.MAX_VALUE)
                 .setRepeatBehavior(Animator.RepeatBehavior.LOOP)
-                .addTarget(PropertySetter.getTarget(this, "startArc", 0, -270, -2 * 270, -3 * 270, -4 * 270))
+                .addTarget(SafePropertySetter.getTarget(startArc, 0, -270, -2 * 270, -3 * 270, -4 * 270))
                 .setInterpolator(new Interpolator() {
                     private final Interpolator spline = new SplineInterpolator(0.4, 0, 0.2, 1);
 
@@ -66,7 +66,7 @@ public class MaterialProgressSpinner extends JComponent {
                 .setDuration(ARCTIME, TimeUnit.MILLISECONDS)
                 .setRepeatCount(Long.MAX_VALUE)
                 .setRepeatBehavior(Animator.RepeatBehavior.LOOP)
-                .addTarget(PropertySetter.getTarget(this, "arcSize", 0, 270, 0))
+                .addTarget(SafePropertySetter.getTarget(arcSize, 0, 270, 0))
                 .setInterpolator(new Interpolator() {
                     private final Interpolator spline = new SplineInterpolator(0.4, 0, 0.2, 1);
 
@@ -85,7 +85,7 @@ public class MaterialProgressSpinner extends JComponent {
                 .setDuration(360 * ARCTIME / (ARCSTARTROT + (360 - ARCSIZE)), TimeUnit.MILLISECONDS)
                 .setRepeatCount(Long.MAX_VALUE)
                 .setRepeatBehavior(Animator.RepeatBehavior.LOOP)
-                .addTarget(PropertySetter.getTarget(this, "rotation", 360, 0))
+                .addTarget(SafePropertySetter.getTarget(rotation, 360, 0))
                 .build();
         animator3.start();
         timer.init();
@@ -96,53 +96,12 @@ public class MaterialProgressSpinner extends JComponent {
         setOpaque(false);
     }
 
-    @Deprecated
-    public int getStartArc() {
-        return startArc;
-    }
-
-    @Deprecated
-    public void setStartArc(int startArc) {
-        this.startArc = startArc;
-        repaint();
-    }
-
-    @Deprecated
-    public int getArcSize() {
-        return arcSize;
-    }
-
-    @Deprecated
-    public void setArcSize(int arcSize) {
-        this.arcSize = arcSize;
-    }
-
-    @Deprecated
-    public int getRotation() {
-        return rotation;
-    }
-
-    @Deprecated
-    public void setRotation(int rotation) {
-        this.rotation = rotation;
-    }
-
-    @Deprecated
-    public int getRotation2() {
-        return rotation2;
-    }
-
-    @Deprecated
-    public void setRotation2(int rotation2) {
-        this.rotation2 = rotation2;
-    }
-
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setColor(getForeground());
         g2.setStroke(new BasicStroke(5, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND));
-        g2.drawArc(5, 5, getWidth() - 10, getWidth() - 10, startArc + rotation + rotation2 + 90, Math.max(1, arcSize));
+        g2.drawArc(5, 5, getWidth() - 10, getWidth() - 10, startArc.getValue() + rotation.getValue() + 90, Math.max(1, arcSize.getValue()));
     }
 }

@@ -1,7 +1,7 @@
 package de.craften.ui.swingmaterial;
 
+import de.craften.ui.swingmaterial.util.SafePropertySetter;
 import org.jdesktop.core.animation.timing.Animator;
-import org.jdesktop.core.animation.timing.PropertySetter;
 import org.jdesktop.core.animation.timing.interpolators.SplineInterpolator;
 import org.jdesktop.swing.animation.timing.sources.SwingTimerTimingSource;
 
@@ -16,7 +16,7 @@ public class ElevationEffect {
     private final SwingTimerTimingSource timer;
     protected final JComponent target;
     private Animator animator;
-    protected double level = 0;
+    protected final SafePropertySetter.Property<Double> level;
     protected int targetLevel = 0;
 
     private ElevationEffect(final JComponent component, int level) {
@@ -25,7 +25,7 @@ public class ElevationEffect {
         timer = new SwingTimerTimingSource();
         timer.init();
 
-        this.level = level;
+        this.level = SafePropertySetter.animatableProperty(target, (double) level);
         this.targetLevel = level;
     }
 
@@ -44,38 +44,21 @@ public class ElevationEffect {
      * @param level elevation level (0..5)
      */
     public void setLevel(int level) {
-        if (animator != null) {
-            if (level != targetLevel) {
+        if (level != targetLevel) {
+            if (animator != null) {
                 animator.stop();
-                animator = new Animator.Builder(timer)
-                        .setDuration(500, TimeUnit.MILLISECONDS)
-                        .setEndBehavior(Animator.EndBehavior.HOLD)
-                        .setInterpolator(new SplineInterpolator(0.55, 0, 0.1, 1))
-                        .addTarget(PropertySetter.getTarget(this, "actualLevel", this.level, (double) level))
-                        .build();
-                animator.start();
             }
-        } else {
             animator = new Animator.Builder(timer)
                     .setDuration(500, TimeUnit.MILLISECONDS)
                     .setEndBehavior(Animator.EndBehavior.HOLD)
                     .setInterpolator(new SplineInterpolator(0.55, 0, 0.1, 1))
-                    .addTarget(PropertySetter.getTarget(this, "actualLevel", this.level, (double) level))
+                    .addTarget(SafePropertySetter.getTarget(this.level, this.level.getValue(), (double) level))
                     .build();
             animator.start();
+        } else {
+            animator = null;
         }
         targetLevel = level;
-    }
-
-    @Deprecated
-    public double getActualLevel() {
-        return level;
-    }
-
-    @Deprecated
-    public void setActualLevel(double level) {
-        this.level = level;
-        target.repaint();
     }
 
     /**
@@ -87,7 +70,7 @@ public class ElevationEffect {
         Graphics2D g2 = (Graphics2D) g;
         g2.setBackground(target.getParent().getBackground());
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-        g.drawImage(MaterialShadow.renderShadow(target.getWidth(), target.getHeight(), level), 0, 0, null);
+        g.drawImage(MaterialShadow.renderShadow(target.getWidth(), target.getHeight(), level.getValue()), 0, 0, null);
     }
 
     /**
@@ -126,7 +109,7 @@ public class ElevationEffect {
 
         @Override
         public void paint(Graphics g) {
-            g.drawImage(MaterialShadow.renderCircularShadow(target.getWidth(), level), 0, 0, null);
+            g.drawImage(MaterialShadow.renderCircularShadow(target.getWidth(), level.getValue()), 0, 0, null);
         }
     }
 }
