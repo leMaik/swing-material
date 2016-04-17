@@ -111,7 +111,7 @@ public class MaterialTextField extends JTextField {
         super.paintComponent(g);
         g2.translate(0, -9);
 
-        if (!getHint().isEmpty() && getText().isEmpty() && (getLabel().isEmpty() || isFocusOwner())) {
+        if (!getHint().isEmpty() && getText().isEmpty() && (getLabel().isEmpty() || isFocusOwner()) && floatingLabel.isFloatingAbove()) {
             g.setFont(Roboto.REGULAR.deriveFont(16f));
             g2.setColor(MaterialColor.MIN_BLACK);
             FontMetrics metrics = g.getFontMetrics(g.getFont());
@@ -234,6 +234,10 @@ public class MaterialTextField extends JTextField {
             g.setColor(color.getValue());
             FontMetrics metrics = g.getFontMetrics(g.getFont());
             g.drawString(getText(), 0, metrics.getAscent() + y.getValue().intValue());
+        }
+
+        boolean isFloatingAbove() {
+            return y.getValue() < 17d;
         }
     }
 }

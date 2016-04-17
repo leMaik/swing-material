@@ -107,7 +107,7 @@ public class MaterialPasswordField extends JPasswordField {
         super.paintComponent(g);
         g2.translate(0, -9);
 
-        if (!getHint().isEmpty() && getPassword().length == 0 && (getLabel().isEmpty() || isFocusOwner())) {
+        if (!getHint().isEmpty() && getPassword().length == 0 && (getLabel().isEmpty() || isFocusOwner()) && floatingLabel.isFloatingAbove()) {
             g.setFont(Roboto.REGULAR.deriveFont(16f));
             g2.setColor(MaterialColor.MIN_BLACK);
             FontMetrics metrics = g.getFontMetrics(g.getFont());
