@@ -41,7 +41,7 @@ public class MaterialComboBox<T> extends JComboBox<T> {
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, getWidth(), getHeight());
 
-        g.setFont(Roboto.REGULAR.deriveFont(15f));
+        g.setFont(Roboto.REGULAR.deriveFont(16f));
         g2.setColor(Color.BLACK);
         FontMetrics metrics = g.getFontMetrics(g.getFont());
         String text = getSelectedItem() != null ? getSelectedItem().toString() : "";
@@ -87,7 +87,7 @@ public class MaterialComboBox<T> extends JComboBox<T> {
             }
             g.fillRect(0, 0, getWidth(), getHeight());
 
-            g.setFont(Roboto.REGULAR.deriveFont(16f));
+            g.setFont(Roboto.REGULAR.deriveFont(15f));
             if (selected) {
                 g2.setColor(MaterialColor.PINK_500);
             } else {
@@ -116,7 +116,7 @@ public class MaterialComboBox<T> extends JComboBox<T> {
 
         @Override
         protected Rectangle computePopupBounds(int px, int py, int pw, int ph) {
-            return super.computePopupBounds(px, py - comboBox.getHeight(),
+            return super.computePopupBounds(px, py - comboBox.getHeight() + 10,
                     (int) Math.max(comboBox.getPreferredSize().getWidth(), pw), ph);
         }
 
