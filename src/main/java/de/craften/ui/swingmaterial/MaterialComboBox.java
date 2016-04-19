@@ -201,7 +201,7 @@ public class MaterialComboBox<T> extends JComboBox<T> {
         }
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         JFrame window = new JFrame();
 
         MaterialComboBox comboBox = new MaterialComboBox();
@@ -221,5 +221,5 @@ public class MaterialComboBox<T> extends JComboBox<T> {
         window.add(textField);
         window.setSize(250, 100);
         window.setVisible(true);
-    }
+    }*/
 }
