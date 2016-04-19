@@ -1,15 +1,12 @@
 package de.craften.ui.swingmaterial;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.plaf.ComboBoxUI;
-import javax.swing.plaf.PopupMenuUI;
-import javax.swing.plaf.ScrollBarUI;
-import javax.swing.plaf.ScrollPaneUI;
-import javax.swing.plaf.basic.*;
+import javax.swing.border.MatteBorder;
+import javax.swing.plaf.basic.BasicComboBoxUI;
+import javax.swing.plaf.basic.BasicComboPopup;
+import javax.swing.plaf.basic.BasicScrollBarUI;
+import javax.swing.plaf.basic.ComboPopup;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 /**
  * A Material Design combo box.
@@ -44,7 +41,7 @@ public class MaterialComboBox<T> extends JComboBox<T> {
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, getWidth(), getHeight());
 
-        g.setFont(Roboto.REGULAR.deriveFont(16f));
+        g.setFont(Roboto.REGULAR.deriveFont(15f));
         g2.setColor(Color.BLACK);
         FontMetrics metrics = g.getFontMetrics(g.getFont());
         String text = getSelectedItem() != null ? getSelectedItem().toString() : "";
@@ -70,7 +67,7 @@ public class MaterialComboBox<T> extends JComboBox<T> {
         public Component getListCellRendererComponent(JList jList, Object o, int index, boolean isSelected, boolean cellHasFocus) {
             text = o != null ? o.toString() : "";
             setSize(jList.getWidth(), 56);
-            setPreferredSize(new Dimension(jList.getWidth(), 56));
+            setPreferredSize(new Dimension(jList.getWidth(), 32));
             setOpaque(true);
             mouseOver = isSelected;
             selected = comboBox.getSelectedIndex() == index;
@@ -104,7 +101,7 @@ public class MaterialComboBox<T> extends JComboBox<T> {
     public static class Popup extends BasicComboPopup {
         public Popup(JComboBox combo) {
             super(combo);
-            setBackground(new Color(0, 0, 0, 0));
+            setBackground(Color.WHITE);
             setOpaque(false);
             setBorderPainted(false);
         }
@@ -112,8 +109,8 @@ public class MaterialComboBox<T> extends JComboBox<T> {
         @Override
         protected JScrollPane createScroller() {
             JScrollPane scroller = super.createScroller();
-            scroller.setBorder(null);
             scroller.setVerticalScrollBar(new ScrollBar(Adjustable.VERTICAL));
+            scroller.setBorder(new MatteBorder(16, 0, 16, 0, Color.WHITE));
             return scroller;
         }
 
@@ -195,9 +192,16 @@ public class MaterialComboBox<T> extends JComboBox<T> {
             }
             return null;
         }
+
+        @Override
+        public void paint(Graphics g) {
+            g.setColor(Color.WHITE);
+            g.fillRect(0, 0, getWidth(), getHeight());
+            super.paint(g);
+        }
     }
 
-    /*public static void main(String[] args) {
+    public static void main(String[] args) {
         JFrame window = new JFrame();
 
         MaterialComboBox comboBox = new MaterialComboBox();
@@ -217,5 +221,5 @@ public class MaterialComboBox<T> extends JComboBox<T> {
         window.add(textField);
         window.setSize(250, 100);
         window.setVisible(true);
-    }*/
+    }
 }
