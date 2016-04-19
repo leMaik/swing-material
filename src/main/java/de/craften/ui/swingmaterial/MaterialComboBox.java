@@ -53,7 +53,7 @@ public class MaterialComboBox<T> extends JComboBox<T> {
         g2.setColor(MaterialColor.GREY_300);
         g2.fillRect(0, getHeight() - 9, getWidth(), 1);
 
-        g2.fillPolygon(new int[]{getWidth() - 10, getWidth() - 15, getWidth() - 20}, new int[]{getHeight() - 24, getHeight() - 19, getHeight() - 24}, 3);
+        g2.fillPolygon(new int[]{getWidth() - 5, getWidth() - 10, getWidth() - 15}, new int[]{getHeight() - 24, getHeight() - 19, getHeight() - 24}, 3);
     }
 
     public static class FieldRenderer<T> extends JComponent implements ListCellRenderer<T> {
