@@ -53,6 +53,15 @@ public class ToastBar extends JComponent {
         }
     }
 
+    @Override
+    public boolean contains(int x, int y) {
+        if (currentToast != null) {
+            return super.contains(x, y);
+        } else {
+            return false;
+        }
+    }
+
     private void displayNextToast() {
         if (animationRunning) {
             return;
