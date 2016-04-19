@@ -120,7 +120,7 @@ public class MaterialTextField extends JTextField {
 
         floatingLabel.paint(g2);
 
-        g2.setColor(MaterialColor.MIN_BLACK);
+        g2.setColor(MaterialColor.GREY_300);
         g2.fillRect(0, getHeight() - 9, getWidth(), 1);
 
         g2.setColor(MaterialColor.CYAN_500);
