@@ -20,6 +20,7 @@ public class MaterialButton extends JButton {
     private boolean isMousePressed = false;
     private boolean isMouseOver = false;
     private Color rippleColor = Color.WHITE;
+    private Cursor cursor = super.getCursor();
 
     /**
      * Creates a new button.
@@ -106,6 +107,13 @@ public class MaterialButton extends JButton {
     public void setEnabled(boolean b) {
         super.setEnabled(b);
         elevation.setLevel(getElevation());
+        super.setCursor(b ? cursor : Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+    }
+
+    @Override
+    public void setCursor(Cursor cursor) {
+        super.setCursor(cursor);
+        this.cursor = cursor;
     }
 
     @Override
