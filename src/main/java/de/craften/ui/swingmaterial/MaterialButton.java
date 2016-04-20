@@ -136,7 +136,7 @@ public class MaterialButton extends JButton {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-        if (type != Type.FLAT) {
+        if (type != Type.FLAT && isEnabled()) {
             elevation.paint(g);
         }
         g2.translate(MaterialShadow.OFFSET_LEFT, MaterialShadow.OFFSET_TOP);
