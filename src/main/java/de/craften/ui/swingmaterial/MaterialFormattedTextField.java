@@ -2,6 +2,7 @@ package de.craften.ui.swingmaterial;
 
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
+import javax.swing.text.DefaultFormatterFactory;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
@@ -11,14 +12,16 @@ import java.text.Format;
  * A Material Design formatted field.
  */
 public class MaterialFormattedTextField extends JFormattedTextField {
-	private MaterialTextField.FloatingLabel floatingLabel = new MaterialTextField.FloatingLabel(this);
-	private MaterialTextField.Line line = new MaterialTextField.Line(this);
+	private MaterialTextField.FloatingLabel floatingLabel;
+	private MaterialTextField.Line line;
 	private String hint = "";
 
 	/**
 	 * Creates a new field with no mask.
 	 */
 	public MaterialFormattedTextField() {
+		floatingLabel = new MaterialTextField.FloatingLabel(this);
+		line = new MaterialTextField.Line(this);
 		initMaterialFormattedTextField();
 	}
 
@@ -31,7 +34,6 @@ public class MaterialFormattedTextField extends JFormattedTextField {
 	 */
 	public MaterialFormattedTextField(Object value) {
 		super(value);
-		initMaterialFormattedTextField();
 	}
 
 	/**
@@ -43,7 +45,6 @@ public class MaterialFormattedTextField extends JFormattedTextField {
 	 */
 	public MaterialFormattedTextField(Format format) {
 		super(format);
-		initMaterialFormattedTextField();
 	}
 
 	/**
@@ -52,8 +53,7 @@ public class MaterialFormattedTextField extends JFormattedTextField {
 	 * @param formatter AbstractFormatter to use for formatting.
 	 */
 	public MaterialFormattedTextField(AbstractFormatter formatter) {
-		super(formatter);
-		initMaterialFormattedTextField();
+		this(new DefaultFormatterFactory(formatter));
 	}
 
 	/**
@@ -63,8 +63,8 @@ public class MaterialFormattedTextField extends JFormattedTextField {
 	 * @param factory AbstractFormatterFactory used for formatting.
 	 */
 	public MaterialFormattedTextField(AbstractFormatterFactory factory) {
-		super(factory);
-		initMaterialFormattedTextField();
+		this();
+		setFormatterFactory(factory);
 	}
 
 
@@ -78,6 +78,8 @@ public class MaterialFormattedTextField extends JFormattedTextField {
 	public MaterialFormattedTextField(AbstractFormatterFactory factory, Object currentValue) {
 		super(factory, currentValue);
 		initMaterialFormattedTextField();
+		floatingLabel = new MaterialTextField.FloatingLabel(this);
+		line = new MaterialTextField.Line(this);
 	}
 
 	/**
@@ -134,6 +136,12 @@ public class MaterialFormattedTextField extends JFormattedTextField {
 	public void setHint(String hint) {
 		this.hint = hint;
 		repaint();
+	}
+
+	public void setText(String s) {
+		super.setText(s);
+		floatingLabel.update();
+		line.update();
 	}
 
 	@Override
