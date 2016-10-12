@@ -76,10 +76,8 @@ public class MaterialFormattedTextField extends JFormattedTextField {
 	 * @param currentValue Initial value to use
 	 */
 	public MaterialFormattedTextField(AbstractFormatterFactory factory, Object currentValue) {
-		super(factory, currentValue);
-		initMaterialFormattedTextField();
-		floatingLabel = new MaterialTextField.FloatingLabel(this);
-		line = new MaterialTextField.Line(this);
+		this(currentValue);
+		setFormatterFactory(factory);
 	}
 
 	/**
