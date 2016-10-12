@@ -1,110 +1,189 @@
 package de.craften.ui.swingmaterial;
 
+import javax.swing.*;
+import javax.swing.text.DefaultCaret;
 import java.awt.*;
-import java.awt.Desktop.Action;
-import java.awt.event.*;
-import java.awt.im.InputContext;
-import java.io.*;
-import java.text.*;
-import java.util.*;
-import javax.swing.UIManager;
-import javax.swing.event.*;
-import javax.swing.plaf.UIResource;
-import javax.swing.text.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyEvent;
+import java.text.Format;
+
+/**
+ * A Material Design formatted field.
+ */
+public class MaterialFormattedTextField extends JFormattedTextField {
+	private MaterialTextField.FloatingLabel floatingLabel = new MaterialTextField.FloatingLabel(this);
+	private MaterialTextField.Line line = new MaterialTextField.Line(this);
+	private String hint = "";
+
+	/**
+	 * Creates a new field with no mask.
+	 */
+	public MaterialFormattedTextField() {
+		initMaterialFormattedTextField();
+	}
+
+	/**
+	 * Creates a new field with the value. This will
+	 * create an <code>AbstractFormatterFactory</code> based on the
+	 * type of <code>value</code>.
+	 *
+	 * @param value Initial value
+	 */
+	public MaterialFormattedTextField(Object value) {
+		super(value);
+		initMaterialFormattedTextField();
+	}
+
+	/**
+	 * Creates a new field. <code>format</code> is
+	 * wrapped in an appropriate <code>AbstractFormatter</code> which is
+	 * then wrapped in an <code>AbstractFormatterFactory</code>.
+	 *
+	 * @param format Format used to look up an AbstractFormatter
+	 */
+	public MaterialFormattedTextField(Format format) {
+		super(format);
+		initMaterialFormattedTextField();
+	}
+
+	/**
+	 * Creates a new field with the specified <code>AbstractFormatter</code>.
+	 *
+	 * @param formatter AbstractFormatter to use for formatting.
+	 */
+	public MaterialFormattedTextField(AbstractFormatter formatter) {
+		super(formatter);
+		initMaterialFormattedTextField();
+	}
+
+	/**
+	 * Creates a new field with the specified
+	 * <code>AbstractFormatterFactory</code>.
+	 *
+	 * @param factory AbstractFormatterFactory used for formatting.
+	 */
+	public MaterialFormattedTextField(AbstractFormatterFactory factory) {
+		super(factory);
+		initMaterialFormattedTextField();
+	}
 
 
-public class MaterialFormattedTextField extends MaterialTextField {
+	/**
+	 * Creates a new field with the specified
+	 * <code>AbstractFormatterFactory</code> and initial value.
+	 *
+	 * @param factory <code>AbstractFormatterFactory</code> used for formatting.
+	 * @param currentValue Initial value to use
+	 */
+	public MaterialFormattedTextField(AbstractFormatterFactory factory, Object currentValue) {
+		super(factory, currentValue);
+		initMaterialFormattedTextField();
+	}
 
-    private static final String uiClassID = "FormattedTextFieldUI";
-    private static final Action[] defaultActions =
-            { new CommitAction(), new CancelAction() };
+	/**
+	 * Initialize the default values of the field
+	 */
+	private void initMaterialFormattedTextField() {
+		setBorder(null);
+		setFont(Roboto.REGULAR.deriveFont(16f));
+		floatingLabel.setText("");
 
-    public static final int COMMIT = 0;
+		setCaret(new DefaultCaret() {
+			@Override
+			protected synchronized void damage(Rectangle r) {
+				MaterialFormattedTextField.this.repaint(); //fix caret not being removed completely
+			}
+		});
+		getCaret().setBlinkRate(500);
+	}
 
-    public static final int COMMIT_OR_REVERT = 1;
+	/**
+	 * Gets the text of the floating label.
+	 *
+	 * @return text of the floating label
+	 */
+	public String getLabel() {
+		return floatingLabel.getText();
+	}
 
-    public static final int REVERT = 2;
+	/**
+	 * Sets the text of the floating label.
+	 *
+	 * @param label text of the floating label
+	 */
+	public void setLabel(String label) {
+		floatingLabel.setText(label);
+		floatingLabel.update();
+		repaint();
+	}
 
-    public static final int PERSIST = 3;
+	/**
+	 * Gets the hint text.
+	 *
+	 * @return hint text
+	 */
+	public String getHint() {
+		return hint;
+	}
 
-    private AbstractFormatterFactory factory;
+	/**
+	 * Sets the hint text.
+	 *
+	 * @param hint hint text
+	 */
+	public void setHint(String hint) {
+		this.hint = hint;
+		repaint();
+	}
 
-    private AbstractFormatter format;
+	@Override
+	protected void processFocusEvent(FocusEvent e) {
+		super.processFocusEvent(e);
+		floatingLabel.update();
+		line.update();
+		repaint();
+	}
 
-    private Object value;
+	@Override
+	protected void processKeyEvent(KeyEvent e) {
+		super.processKeyEvent(e);
+		floatingLabel.update();
+		line.update();
+		repaint();
+	}
 
-    private boolean editValid;
-    
-    private int focusLostBehavior;
-    /**
-     * Indicates the current value has been edited.
-     */
-    private boolean edited;
-    /**
-     * Used to set the dirty state.
-     */
-    private DocumentListener documentListener;
-    /**
-     * Masked used to set the AbstractFormatterFactory.
-     */
-    private Object mask;
-    /**
-     * ActionMap that the TextFormatter Actions are added to.
-     */
-    private ActionMap textFormatterActionMap;
-    /**
-     * Indicates the input method composed text is in the document
-     */
-    private boolean composedTextExists = false;
-    /**
-     * A handler for FOCUS_LOST event
-     */
-    private FocusLostHandler focusLostHandler;
+	@Override
+	protected void paintComponent(Graphics g) {
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
+		g2.setColor(getBackground());
+		g2.fillRect(0, 0, getWidth(), getHeight());
 
+		g2.translate(0, 9);
+		super.paintComponent(g);
+		g2.translate(0, -9);
 
-    
-    
-    public MaterialFormattedTextField() {
-        super();
-        enableEvents(AWTEvent.FOCUS_EVENT_MASK);
-        setFocusLostBehavior(COMMIT_OR_REVERT);
-    }
+		if (!getHint().isEmpty() && getText().length() == 0 && (getLabel().isEmpty() || isFocusOwner()) && floatingLabel.isFloatingAbove()) {
+			g.setFont(Roboto.REGULAR.deriveFont(16f));
+			g2.setColor(MaterialColor.MIN_BLACK);
+			FontMetrics metrics = g.getFontMetrics(g.getFont());
+			g.drawString(getHint(), 0, metrics.getAscent() + 36);
+		}
 
-    public MaterialFormattedTextField(Object value) {
-        this();
-        setValue(value);
-    }
+		floatingLabel.paint(g2);
 
-    public MaterialFormattedTextField(java.text.Format format) {
-        this();
-        setFormatterFactory(getDefaultFormatterFactory(format));
-    }
+		g2.setColor(MaterialColor.GREY_300);
+		g2.fillRect(0, getHeight() - 9, getWidth(), 1);
 
-    public MaterialFormattedTextField(AbstractFormatter formatter) {
-        this(new DefaultFormatterFactory(formatter));
-    }
+		g2.setColor(MaterialColor.CYAN_500);
+		g2.fillRect((int) ((getWidth() - line.getWidth()) / 2), getHeight() - 10, (int) line.getWidth(), 2);
+	}
 
-    public MaterialFormattedTextField(AbstractFormatterFactory factory) {
-        this();
-        setFormatterFactory(factory);
-    }
-
-    public MaterialFormattedTextField(AbstractFormatterFactory factory, Object currentValue) {
-        this(currentValue);
-        setFormatterFactory(factory);
-    }
-
-    public void commitEdit() throws ParseException {
-        AbstractFormatter format = getFormatter();
-
-        if (format != null) {
-            setValue(format.stringToValue(getText()), false, true);
-        }
-    }
-
-    public Action[] getActions() {
-        return TextAction.augmentList(super.getActions(), defaultActions);
-    }
+	@Override
+	protected void paintBorder(Graphics g) {
+		//intentionally left blank
+	}
 
 }
