@@ -1,15 +1,21 @@
 package de.craften.ui.swingmaterial;
 
 import javax.swing.*;
-import javax.swing.text.DefaultCaret;
-import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.Format;
+import java.text.NumberFormat;
+import java.util.Date;
 
 /**
  * A Material Design formatted field.
+ *
+ * @author Vitor "Pliavi" Silvério
+ * @see <a href="https://www.google.com/design/spec/components/text-fields.html">Text fields (Google design guidelines)</a>
  */
 public class MaterialFormattedTextField extends JFormattedTextField {
 	private MaterialTextField.FloatingLabel floatingLabel;
@@ -33,7 +39,8 @@ public class MaterialFormattedTextField extends JFormattedTextField {
 	 * @param value Initial value
 	 */
 	public MaterialFormattedTextField(Object value) {
-		super(value);
+		this();
+		setValue(value);
 	}
 
 	/**
@@ -44,7 +51,8 @@ public class MaterialFormattedTextField extends JFormattedTextField {
 	 * @param format Format used to look up an AbstractFormatter
 	 */
 	public MaterialFormattedTextField(Format format) {
-		super(format);
+		this();
+		setFormatterFactory(getDefaultFormatterFactory(format));
 	}
 
 	/**
@@ -66,7 +74,6 @@ public class MaterialFormattedTextField extends JFormattedTextField {
 		this();
 		setFormatterFactory(factory);
 	}
-
 
 	/**
 	 * Creates a new field with the specified
@@ -136,6 +143,7 @@ public class MaterialFormattedTextField extends JFormattedTextField {
 		repaint();
 	}
 
+	@Override
 	public void setText(String s) {
 		super.setText(s);
 		floatingLabel.update();
@@ -190,6 +198,39 @@ public class MaterialFormattedTextField extends JFormattedTextField {
 	@Override
 	protected void paintBorder(Graphics g) {
 		//intentionally left blank
+	}
+
+	/**
+	 * Returns an AbstractFormatterFactory suitable for the passed in
+	 * Object type.
+	 */
+	private AbstractFormatterFactory getDefaultFormatterFactory(Object type) {
+		if (type instanceof DateFormat) {
+			return new DefaultFormatterFactory(new DateFormatter
+					((DateFormat)type));
+		}
+		if (type instanceof NumberFormat) {
+			return new DefaultFormatterFactory(new NumberFormatter(
+					(NumberFormat)type));
+		}
+		if (type instanceof Format) {
+			return new DefaultFormatterFactory(new InternationalFormatter(
+					(Format)type));
+		}
+		if (type instanceof Date) {
+			return new DefaultFormatterFactory(new DateFormatter());
+		}
+		if (type instanceof Number) {
+			AbstractFormatter displayFormatter = new NumberFormatter();
+			((NumberFormatter)displayFormatter).setValueClass(type.getClass());
+			AbstractFormatter editFormatter = new NumberFormatter(
+					new DecimalFormat("#.#"));
+			((NumberFormatter)editFormatter).setValueClass(type.getClass());
+
+			return new DefaultFormatterFactory(displayFormatter,
+					displayFormatter,editFormatter);
+		}
+		return new DefaultFormatterFactory(new DefaultFormatter());
 	}
 
 }
