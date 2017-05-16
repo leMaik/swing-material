@@ -7,6 +7,7 @@ import org.jdesktop.swing.animation.timing.sources.SwingTimerTimingSource;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -19,6 +20,9 @@ public class ElevationEffect {
     protected final SafePropertySetter.Property<Double> level;
     protected int targetLevel = 0;
 
+    //DS-addons: Cache for shadows
+    protected final MaterialShadow shadow;
+
     private ElevationEffect(final JComponent component, int level) {
         this.target = component;
 
@@ -27,6 +31,8 @@ public class ElevationEffect {
 
         this.level = SafePropertySetter.animatableProperty(target, (double) level);
         this.targetLevel = level;
+        //DS-addons: Cache for shadows
+        shadow = new MaterialShadow();
     }
 
     /**
@@ -60,7 +66,7 @@ public class ElevationEffect {
         }
         targetLevel = level;
     }
-
+    
     /**
      * Paints this effect.
      *
@@ -70,7 +76,9 @@ public class ElevationEffect {
         Graphics2D g2 = (Graphics2D) g;
         g2.setBackground(target.getParent().getBackground());
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-        g.drawImage(MaterialShadow.renderShadow(target.getWidth(), target.getHeight(), level.getValue()), 0, 0, null);
+        //DS-addons: Cache for shadows
+        //g.drawImage(MaterialShadow.renderShadow(target.getWidth(), target.getHeight(), level.getValue()), 0, 0, null);
+        g.drawImage(shadow.render(target.getWidth(), target.getHeight(), level.getValue(), MaterialShadow.Type.SQUARE), 0, 0, null);
     }
 
     /**
@@ -109,7 +117,9 @@ public class ElevationEffect {
 
         @Override
         public void paint(Graphics g) {
-            g.drawImage(MaterialShadow.renderCircularShadow(target.getWidth(), level.getValue()), 0, 0, null);
+            //DS-addons: Cache for shadows
+            //g.drawImage(MaterialShadow.renderCircularShadow(target.getWidth(), level.getValue()), 0, 0, null);
+            g.drawImage(shadow.render(target.getWidth(), target.getHeight(), level.getValue(), MaterialShadow.Type.CIRCULAR), 0, 0, null);
         }
     }
 }

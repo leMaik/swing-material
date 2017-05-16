@@ -70,6 +70,7 @@ public class MaterialButton extends JButton {
      * Gets the type of this button.
      *
      * @return the type of this button
+     * @see Type
      */
     public Type getType() {
         return type;
@@ -79,10 +80,32 @@ public class MaterialButton extends JButton {
      * Sets the type of this button.
      *
      * @param type the type of this button
+     * @see Type
      */
     public void setType(Type type) {
         this.type = type;
         repaint();
+    }
+    
+    /**
+     * Sets the background color of this button.
+     * <p>
+     * Keep on mind that setting a background color in a Material component like
+     * this will also set the foreground color to either white or black and the
+     * ripple color to a brighter or darker shade of the color, depending of how
+     * bright or dark is the chosen background color. If you want to use a
+     * custom foreground color and ripple color, ensure the background color has
+     * been set first.
+     * <p>
+     * <b>NOTE:</b> It is up to the look and feel to honor this property, some
+     * may choose to ignore it. To avoid any conflicts, using the Metal L&F is
+     * recommended.
+     */
+    @Override
+    public void setBackground(Color bg) {
+        super.setBackground(bg);
+        setForeground(Utils.isDark(bg) ? MaterialColor.WHITE:MaterialColor.BLACK);
+        setRippleColor(Utils.isDark(bg) ? MaterialColor.WHITE:bg.darker().darker());
     }
 
     /**
@@ -195,16 +218,16 @@ public class MaterialButton extends JButton {
      * Button types.
      */
     public enum Type {
-        /**
-         * A default button.
-         */
+        /** A default button. */
         DEFAULT,
         /**
-         * A raised button. Raised buttons have shadow even if they are not focused.
+         * A raised button. Raised buttons have a shadow even if they are not
+         * focused.
          */
         RAISED,
         /**
-         * A flat button. Flat buttons don't have shadows and are typically transparent.
+         * A flat button. Flat buttons don't have shadows and are typically
+         * transparent.
          */
         FLAT
     }

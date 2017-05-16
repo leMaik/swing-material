@@ -9,12 +9,29 @@ import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 
 /**
- * A renderer for Material shadow.
+ * A renderer for Material shadows. Shadows are a sign of elevation, and help
+ * distinguishing elements inside a Material-based GUI.
  */
 public class MaterialShadow {
+    /**
+     * The default offset between the border of the shadow and the top of a
+     * Material component.
+     */
     public static final int OFFSET_TOP = 10;
+    /**
+     * The default offset between the border of the shadow and the left of a
+     * Material component.
+     */
     public static final int OFFSET_LEFT = 20;
+    /**
+     * The default offset between the border of the shadow and the bottom of a
+     * Material component.
+     */
     public static final int OFFSET_BOTTOM = 20;
+    /**
+     * The default offset between the border of the shadow and the right of a
+     * Material component.
+     */
     public static final int OFFSET_RIGHT = 20;
 
     private static KeyFrames<Float> opacity1 = new KeyFrames.Builder<>(0f)
@@ -61,12 +78,14 @@ public class MaterialShadow {
             .build();
 
     /**
-     * Creates an image containing shadow with the given width and height.
+     * Creates a {@link BufferedImage} containing a shadow projected from a
+     * square component of the given width and height.
      *
-     * @param width  width
-     * @param height height
-     * @param level  elevation level (0..5)
-     * @return shadow image
+     * @param width  the component's width, inpixels
+     * @param height the component's height, inpixels
+     * @param level  the elevation level [0~5]
+     * @return A {@link BufferedImage} with the contents of the shadow for a
+     *         circular component of the given radius.
      */
     public static BufferedImage renderShadow(int width, int height, double level) {
         if (level < 0 || level > 5) {
@@ -92,11 +111,13 @@ public class MaterialShadow {
     }
 
     /**
-     * Creates an image containing circular shadow with the given radius.
+     * Creates a {@link BufferedImage} containing a shadow projected from a
+     * circular component of the given radius.
      *
-     * @param radius radius
-     * @param level  elevation level (0..5)
-     * @return shadow image
+     * @param radius the radius length, in pixels
+     * @param level  the elevation level [0~5]
+     * @return A {@link BufferedImage} with the contents of the shadow for a
+     *         circular component of the given radius.
      */
     public static BufferedImage renderCircularShadow(int radius, double level) {
         if (level < 0 || level > 5) {
@@ -136,5 +157,64 @@ public class MaterialShadow {
                 shadow.getWidth() - OFFSET_LEFT - OFFSET_RIGHT, shadow.getWidth() - OFFSET_LEFT - OFFSET_RIGHT));
         g2.dispose();
         FastGaussianBlur.blur(shadow, radius);
+    }
+    
+    //DS-addons: Make MaterialShadow an object so a cache of the background
+    //image can be kept, increasing performance.
+    
+    private int pWd, pHt;
+    private double pLv;
+    private Type pTp;
+    private BufferedImage shadowBg;
+    
+    /**
+     * The types of shadow available for rendering.
+     */
+    public static enum Type {
+        /**
+         * A square, classic shadow. For panels, windows and paper components
+         * in general.
+         */
+        SQUARE,
+        /**
+         * A circular, rounded shadow. Mainly for specific components like FABs.
+         */
+        CIRCULAR
+    }
+    
+    /**
+     * Default constructor for a {@code MaterialShadow}. It is recommended to
+     * keep a single instance for each component that requires it. The
+     * components bundled in this library already handle this by themselves.
+     */
+    public MaterialShadow() {}
+    
+    /**
+     * Renders this {@link MaterialShadow} into a {@link BufferedImage} and
+     * returns it. A copy of the latest render is kept in case a shadow of the
+     * same dimensions and elevation is needed in order to decrease CPU usage
+     * when the component is idle.
+     * @param width  the witdh
+     * @param height 
+     * @param level  
+     * @param type   
+     * @return 
+     */
+    public BufferedImage render(int width, int height, double level, Type type) {
+        if (pWd != width || pHt != height || pLv != level || pTp != type) {
+            switch (type) {
+                case SQUARE:
+                    shadowBg = MaterialShadow.renderShadow(width, height, level);
+                    break;
+                case CIRCULAR:
+                    shadowBg = MaterialShadow.renderCircularShadow(width, level);
+                    break;
+            }
+            pWd = width;
+            pHt = height;
+            pLv = level;
+            pTp = type;
+        }
+        return shadowBg;
     }
 }

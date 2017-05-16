@@ -15,6 +15,8 @@ public class MaterialPasswordField extends JPasswordField {
     private MaterialTextField.FloatingLabel floatingLabel = new MaterialTextField.FloatingLabel(this);
     private MaterialTextField.Line line = new MaterialTextField.Line(this);
     private String hint = "";
+    //DS-addons: use an accentColor instead of a hardcoded one
+    private Color accentColor = MaterialColor.CYAN_500;
 
     /**
      * Creates a new password field.
@@ -23,6 +25,9 @@ public class MaterialPasswordField extends JPasswordField {
         setBorder(null);
         setFont(getFont().deriveFont(16f)); //use default font, Roboto's bullet doesn't work on some platforms (i.e. Mac)
         floatingLabel.setText("");
+        //DS-addons: Prevent overlapping with other form components
+        setOpaque(false);
+        setBackground(MaterialColor.TRANSPARENT);
 
         setCaret(new DefaultCaret() {
             @Override
@@ -35,7 +40,6 @@ public class MaterialPasswordField extends JPasswordField {
 
     /**
      * Gets the text of the floating label.
-     *
      * @return text of the floating label
      */
     public String getLabel() {
@@ -44,7 +48,6 @@ public class MaterialPasswordField extends JPasswordField {
 
     /**
      * Sets the text of the floating label.
-     *
      * @param label text of the floating label
      */
     public void setLabel(String label) {
@@ -53,8 +56,8 @@ public class MaterialPasswordField extends JPasswordField {
     }
 
     /**
-     * Gets the hint text.
-     *
+     * Gets the hint text. The hint text is displayed when this textfield is
+     * empty.
      * @return hint text
      */
     public String getHint() {
@@ -62,14 +65,36 @@ public class MaterialPasswordField extends JPasswordField {
     }
 
     /**
-     * Sets the hint text.
-     *
+     * Sets the hint text. The hint text is displayed when this textfield is
+     * empty.
      * @param hint hint text
      */
     public void setHint(String hint) {
         this.hint = hint;
         repaint();
     }
+    
+    //DS-addons: use an accentColor instead of a hardcoded one
+    /**
+     * Gets the color the label changes to when this {@code materialTextField}
+     * is focused.
+     * @return the {@code "Color"} currently in use for accent. The default
+     *         value is {@link MaterialColor#CYAN_300}.
+     */
+    public Color getAccent() {
+        return accentColor;
+    }
+
+    /**
+     * Sets the color the label changes to when this {@code materialTextField}
+     * is focused. The default value is {@link MaterialColor#CYAN_300}.
+     * @param accentColor the {@code "Color"} that should be used for accent.
+     */
+    public void setAccent(Color accentColor) {
+        this.accentColor = accentColor;
+        floatingLabel.setAccent(accentColor);
+    }
+    //
 
     @Override
     public void setText(String s) {
@@ -119,7 +144,9 @@ public class MaterialPasswordField extends JPasswordField {
         g2.setColor(MaterialColor.GREY_300);
         g2.fillRect(0, getHeight() - 9, getWidth(), 1);
 
-        g2.setColor(MaterialColor.CYAN_500);
+        //DS-addons: use an accentColor instead of a hardcoded one
+        //g2.setColor(MaterialColor.CYAN_500);
+        g2.setColor(accentColor);
         g2.fillRect((int) ((getWidth() - line.getWidth()) / 2), getHeight() - 10, (int) line.getWidth(), 2);
     }
 

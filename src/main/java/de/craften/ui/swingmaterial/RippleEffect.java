@@ -17,7 +17,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * A ripple effect.
+ * A {@code RippleEffect} is applied into certain components, like buttons and
+ * certain list elements. Basically, is that wave of color that appears when you
+ * click stuff.
  */
 public class RippleEffect {
     private final List<RippleAnimation> ripples = new ArrayList<>();

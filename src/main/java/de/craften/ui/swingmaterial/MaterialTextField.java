@@ -13,22 +13,31 @@ import java.awt.event.KeyEvent;
 import java.util.concurrent.TimeUnit;
 
 /**
- * A Material Design single-line text field.
- *
+ * A Material Design single-line text field is the basic way of getting user
+ * input. It includes a descriptive label that appears as a placeholder and then
+ * floats above the text field as content is written. You can also set a hint
+ * for it to appear below the label when the text field is empty.
  * @see <a href="https://www.google.com/design/spec/components/text-fields.html">Text fields (Google design guidelines)</a>
  */
 public class MaterialTextField extends JTextField {
     private FloatingLabel floatingLabel = new FloatingLabel(this);
     private Line line = new Line(this);
     private String hint = "";
+    //DS-addons: use an accentColor instead of a hardcoded one
+    private Color accentColor = MaterialColor.CYAN_500;
 
     /**
-     * Creates a new text field.
+     * Default constructor for {@code MaterialTextField}. A default model is
+     * created and the initial string is empty.
      */
     public MaterialTextField() {
+        super();
         setBorder(null);
         setFont(Roboto.REGULAR.deriveFont(16f));
         floatingLabel.setText("");
+        //DS-addons: Prevent overlapping with other form components
+        setOpaque(false);
+        setBackground(MaterialColor.TRANSPARENT);
 
         setCaret(new DefaultCaret() {
             @Override
@@ -38,20 +47,30 @@ public class MaterialTextField extends JTextField {
         });
         getCaret().setBlinkRate(500);
     }
+    
+    /**
+     * Default constructor for {@code MaterialTextField}. A default model is
+     * created and the initial string is the one provided.
+     * @param text An starting value for this text field
+     */
+    public MaterialTextField(String text) {
+        this();
+        setText(text);
+    }
 
     /**
-     * Gets the text of the floating label.
-     *
-     * @return text of the floating label
+     * Gets the label text. The label will float above any contents input into
+     * this text field.
+     * @return the text being used in the floating label
      */
     public String getLabel() {
         return floatingLabel.getText();
     }
 
     /**
-     * Sets the text of the floating label.
-     *
-     * @param label text of the floating label
+     * Sets the label text. The label will float above any contents input into
+     * this text field.
+     * @param label the text to use in the floating label
      */
     public void setLabel(String label) {
         floatingLabel.setText(label);
@@ -59,23 +78,45 @@ public class MaterialTextField extends JTextField {
     }
 
     /**
-     * Gets the hint text.
-     *
-     * @return hint text
+     * Gets the hint text. The hint text is displayed when this textfield is
+     * empty.
+     * @return the text being used as hint
      */
     public String getHint() {
         return hint;
     }
 
     /**
-     * Sets the hint text.
-     *
-     * @param hint hint text
+     * Sets the hint text. The hint text is displayed when this textfield is
+     * empty.
+     * @param hint the text to use as hint
      */
     public void setHint(String hint) {
         this.hint = hint;
         repaint();
     }
+    
+    //DS-addons: use an accentColor instead of a hardcoded one
+    /**
+     * Gets the color the label changes to when this {@code materialTextField}
+     * is focused.
+     * @return the {@code "Color"} currently in use for accent. The default
+     *         value is {@link MaterialColor#CYAN_300}.
+     */
+    public Color getAccent() {
+        return accentColor;
+    }
+
+    /**
+     * Sets the color the label changes to when this {@code materialTextField}
+     * is focused. The default value is {@link MaterialColor#CYAN_300}.
+     * @param accentColor the {@code "Color"} that should be used for accent.
+     */
+    public void setAccent(Color accentColor) {
+        this.accentColor = accentColor;
+        floatingLabel.setAccent(accentColor);
+    }
+    //
 
     @Override
     public void setText(String s) {
@@ -123,7 +164,9 @@ public class MaterialTextField extends JTextField {
         g2.setColor(MaterialColor.GREY_300);
         g2.fillRect(0, getHeight() - 9, getWidth(), 1);
 
-        g2.setColor(MaterialColor.CYAN_500);
+        //DS-addons: use an accentColor instead of a hardcoded one
+        //g2.setColor(MaterialColor.CYAN_500);
+        g2.setColor(accentColor);
         g2.fillRect((int) ((getWidth() - line.getWidth()) / 2), getHeight() - 10, (int) line.getWidth(), 2);
     }
 
@@ -133,7 +176,7 @@ public class MaterialTextField extends JTextField {
     }
 
     /**
-     * An animated line below a text field.
+     * An animated line that appears below a component when it is focused.
      */
     public static class Line {
         private final SwingTimerTimingSource timer;
@@ -141,14 +184,14 @@ public class MaterialTextField extends JTextField {
         private Animator animator;
         private SafePropertySetter.Property<Double> width;
 
-        Line(JComponent target) {
+        public Line(JComponent target) {
             this.target = target;
             this.timer = new SwingTimerTimingSource();
             timer.init();
             width = SafePropertySetter.animatableProperty(target, 0d);
         }
 
-        void update() {
+        public void update() {
             if (animator != null) {
                 animator.stop();
             }
@@ -177,6 +220,8 @@ public class MaterialTextField extends JTextField {
         private final SafePropertySetter.Property<Double> fontSize;
         private final SafePropertySetter.Property<Color> color;
         private String text;
+        //DS-addons: use an accentColor instead of a hardcoded one
+        private Color accentColor = MaterialColor.CYAN_500;
 
         FloatingLabel(JTextField target) {
             this.target = target;
@@ -187,6 +232,16 @@ public class MaterialTextField extends JTextField {
             fontSize = SafePropertySetter.animatableProperty(target, 16d);
             color = SafePropertySetter.animatableProperty(target, MaterialColor.MIN_BLACK);
         }
+
+        //DS-addons: use an accentColor instead of a hardcoded one
+        public Color getAccent() {
+            return accentColor;
+        }
+
+        public void setAccent(Color accentColor) {
+            this.accentColor = accentColor;
+        }
+        //
 
         void update() {
             if (animator != null) {
@@ -206,12 +261,14 @@ public class MaterialTextField extends JTextField {
             }
             Color targetColor;
             if (target.getText().isEmpty() && target.isFocusOwner()) {
-                targetColor = MaterialColor.CYAN_500;
+                //DS-addons: use an accentColor instead of a hardcoded one
+                //targetColor = MaterialColor.CYAN_500;
+                targetColor = accentColor;
             } else {
                 if (target.getText().isEmpty()) {
                     targetColor = MaterialColor.MIN_BLACK;
                 } else {
-                    targetColor = MaterialColor.LIGHT_BLACK;
+                    targetColor = accentColor; //MaterialColor.LIGHT_BLACK;
                 }
             }
             if (!targetColor.equals(color.getValue())) {
