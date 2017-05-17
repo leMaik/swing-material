@@ -123,6 +123,24 @@ public class Utils {
         //return (color.getRed()*0.21 + color.getGreen()*0.72 + color.getBlue()*0.07) < (0.54*255);
     }
     
+    public static Color darken(Color color) {
+        int r = wrapU8B(color.getRed() - 30);
+        int g = wrapU8B(color.getGreen() - 30);
+        int b = wrapU8B(color.getBlue() - 30);
+        return new Color(r, g, b, color.getAlpha());
+    }
+    
+    public static Color brighten(Color color) {
+        int r = wrapU8B(color.getRed() + 30);
+        int g = wrapU8B(color.getGreen() + 30);
+        int b = wrapU8B(color.getBlue() + 30);
+        return new Color(r, g, b, color.getAlpha());
+    }
+    
+    private static int wrapU8B(int i) {
+        return Math.min(255, Math.max(0, i));
+    }
+    
     //Uncomment this block in order to test #isDark() against all the color constants in Material Color
     /*public static void main(String[] args) {
         Field[] fields = MaterialColor.class.getDeclaredFields();
