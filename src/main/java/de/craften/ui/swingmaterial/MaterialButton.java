@@ -68,7 +68,6 @@ public class MaterialButton extends JButton {
 
     /**
      * Gets the type of this button.
-     *
      * @return the type of this button
      * @see Type
      */
@@ -78,7 +77,6 @@ public class MaterialButton extends JButton {
 
     /**
      * Sets the type of this button.
-     *
      * @param type the type of this button
      * @see Type
      */
@@ -110,7 +108,6 @@ public class MaterialButton extends JButton {
 
     /**
      * Gets the ripple color.
-     *
      * @return the ripple color
      */
     public Color getRippleColor() {
@@ -118,8 +115,7 @@ public class MaterialButton extends JButton {
     }
 
     /**
-     * Sets the ripple color. You should only do this for flat buttons.
-     *
+     * Sets the ripple color. It is recommended to set one for flat buttons.
      * @param rippleColor the ripple color
      */
     public void setRippleColor(Color rippleColor) {

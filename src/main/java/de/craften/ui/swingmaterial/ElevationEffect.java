@@ -7,7 +7,6 @@ import org.jdesktop.swing.animation.timing.sources.SwingTimerTimingSource;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -20,7 +19,6 @@ public class ElevationEffect {
     protected final SafePropertySetter.Property<Double> level;
     protected int targetLevel = 0;
 
-    //DS-addons: Cache for shadows
     protected final MaterialShadow shadow;
 
     private ElevationEffect(final JComponent component, int level) {
@@ -31,13 +29,11 @@ public class ElevationEffect {
 
         this.level = SafePropertySetter.animatableProperty(target, (double) level);
         this.targetLevel = level;
-        //DS-addons: Cache for shadows
         shadow = new MaterialShadow();
     }
 
     /**
      * Gets the elevation level.
-     *
      * @return elevation level (0..5)
      */
     public int getLevel() {
@@ -46,7 +42,6 @@ public class ElevationEffect {
 
     /**
      * Sets the elevation level.
-     *
      * @param level elevation level (0..5)
      */
     public void setLevel(int level) {
@@ -69,39 +64,59 @@ public class ElevationEffect {
     
     /**
      * Paints this effect.
-     *
      * @param g canvas
      */
     public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         g2.setBackground(target.getParent().getBackground());
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-        //DS-addons: Cache for shadows
-        //g.drawImage(MaterialShadow.renderShadow(target.getWidth(), target.getHeight(), level.getValue()), 0, 0, null);
         g.drawImage(shadow.render(target.getWidth(), target.getHeight(), level.getValue(), MaterialShadow.Type.SQUARE), 0, 0, null);
     }
 
     /**
-     * Creates an elevation effect for the given component. You need to call {@link #paint(Graphics)} in your
-     * drawing method to actually paint this effect.
-     *
-     * @param target target component
-     * @param level  initial elevation level (0..5)
-     * @return elevation effect for that component
-     * @see MaterialButton for an example of how the ripple effect is used
+     * Creates an elevation effect for the given component. Each component is
+     * responsible of calling {@link #paint(Graphics)} in order to display the
+     * effect. Here's an example of how the ripple effect can be used:
+     * <p/>
+     * <code>
+     * protected void paintComponent(Graphics g) {<br/>
+     *     super.paintComponent(g);<br/>
+     *     if (isEnabled()) {<br/>
+     *          g.setClip(new Rectangle2D.Float(0, 0, getWidth(), getHeight()));<br/>
+     *          g.setColor(myRippleColor);<br/>
+     *          ripple.paint(g);<br/>
+     *     }<br/>
+     * }
+     * </code>
+     * @param target the target of the resulting {@code ElevationEffect}
+     * @param level  the initial elevation level (0..5)
+     * @return an {@code ElevationEffect} object providing support for painting
+     *         ripples
      */
     public static ElevationEffect applyTo(JComponent target, int level) {
         return new ElevationEffect(target, level);
     }
 
     /**
-     * Creates an elevation effect with a circular shadow for the given component. You need to call
-     * {@link #paint(Graphics)} in your drawing method to actually paint this effect.
-     *
-     * @param target target component
-     * @param level  initial elevation level (0..5)
-     * @return elevation effect for that component
-     * @see MaterialButton for an example of how the ripple effect is used
+     * Creates an elevation effect with a circular shadow for the given
+     * component. Each component is responsible of calling {@link
+     * #paint(Graphics)} in order to display the effect. Here's an example of
+     * how the ripple effect can be used:
+     * <p/>
+     * <code>
+     * protected void paintComponent(Graphics g) {<br/>
+     *     super.paintComponent(g);<br/>
+     *     if (isEnabled()) {<br/>
+     *          g.setClip(new Rectangle2D.Float(0, 0, getWidth(), getHeight()));<br/>
+     *          g.setColor(myRippleColor);<br/>
+     *          ripple.paint(g);<br/>
+     *     }<br/>
+     * }
+     * </code>
+     * @param target the target of the resulting {@code ElevationEffect}
+     * @param level  the initial elevation level (0..5)
+     * @return an {@code ElevationEffect} object providing support for painting
+     *         ripples
      */
     public static ElevationEffect applyCirularTo(JComponent target, int level) {
         return new ElevationEffect.Circular(target, level);
@@ -117,8 +132,6 @@ public class ElevationEffect {
 
         @Override
         public void paint(Graphics g) {
-            //DS-addons: Cache for shadows
-            //g.drawImage(MaterialShadow.renderCircularShadow(target.getWidth(), level.getValue()), 0, 0, null);
             g.drawImage(shadow.render(target.getWidth(), target.getHeight(), level.getValue(), MaterialShadow.Type.CIRCULAR), 0, 0, null);
         }
     }

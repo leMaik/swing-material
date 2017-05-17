@@ -159,9 +159,6 @@ public class MaterialShadow {
         FastGaussianBlur.blur(shadow, radius);
     }
     
-    //DS-addons: Make MaterialShadow an object so a cache of the background
-    //image can be kept, increasing performance.
-    
     private int pWd, pHt;
     private double pLv;
     private Type pTp;

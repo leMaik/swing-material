@@ -15,11 +15,8 @@ import java.awt.event.FocusEvent;
  * @see <a href="https://www.google.com/design/spec/components/buttons.html#buttons-dropdown-buttons">Dropdown buttons (Google design guidelines)</a>
  */
 public class MaterialComboBox<T> extends JComboBox<T> {
-    //DS-addons: use a Line to signal focus
     private MaterialTextField.Line line = new MaterialTextField.Line(this);
-    //DS-addons: use an accentColor instead of a hardcoded one
     private Color accentColor = MaterialColor.PINK_500;
-    //DS-addons: use hints as text fields do
     private String hint = "";
     
     public MaterialComboBox() {
@@ -35,11 +32,6 @@ public class MaterialComboBox<T> extends JComboBox<T> {
 
             @Override
             protected JButton createArrowButton() {
-                //DS-addons: Now this was giving me a NPE every single time,
-                //so I checked out what super.createArrowButton() usually does
-                //and adapted it. It needs some testing in OSes other than Windows.
-                //return null;
-                //return super.createArrowButton();
                 JButton button = new javax.swing.plaf.basic.BasicArrowButton(
                         javax.swing.plaf.basic.BasicArrowButton.SOUTH,
                         MaterialColor.TRANSPARENT,
@@ -50,12 +42,10 @@ public class MaterialComboBox<T> extends JComboBox<T> {
                 return button;
             }
         });
-        //DS-addons: Prevent overlapping with other form components
         setOpaque(false);
         setBackground(MaterialColor.TRANSPARENT);
     }
     
-    //DS-addons: use an accentColor instead of a hardcoded one
     /**
      * Gets the color the label changes to when this {@code materialTextField}
      * is focused.
@@ -74,13 +64,10 @@ public class MaterialComboBox<T> extends JComboBox<T> {
     public void setAccent(Color accentColor) {
         this.accentColor = accentColor;
     }
-    //
 
-    //DS-addons: use hints as text fields do
     /**
      * Gets the hint text. The hint text is displayed when the list inside this
      * combo box is empty or no element has been selected yet.
-     *
      * @return hint text
      */
     public String getHint() {
@@ -90,16 +77,13 @@ public class MaterialComboBox<T> extends JComboBox<T> {
     /**
      * Sets the hint text. The hint text is displayed when the list inside this
      * combo box is empty or no element has been selected yet.
-     *
      * @param hint hint text
      */
     public void setHint(String hint) {
         this.hint = hint;
         repaint();
     }
-    //
     
-    //DS-addons: use a Line to signal focus
     @Override
     protected void processFocusEvent(FocusEvent e) {
         super.processFocusEvent(e);
@@ -112,16 +96,12 @@ public class MaterialComboBox<T> extends JComboBox<T> {
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        //g.setColor(Color.WHITE);
         g.setColor(getBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
 
         g.setFont(Roboto.REGULAR.deriveFont(16f));
-        //DS-addons: use hints as text fields do
-        //g2.setColor(Color.BLACK);
         g.setColor(getSelectedItem() == null ? MaterialColor.MIN_BLACK:getForeground());
         FontMetrics metrics = g.getFontMetrics(g.getFont());
-        //DS-addons: use hints as text fields do
         String text = getSelectedItem() != null ? getSelectedItem().toString() : (hint != null ? hint:"");
         g.drawString(text, 0, metrics.getAscent() + (getHeight() - metrics.getHeight()) / 2);
 
@@ -129,11 +109,8 @@ public class MaterialComboBox<T> extends JComboBox<T> {
         g2.fillRect(0, getHeight() - 9, getWidth(), 1);
 
         if (isFocusOwner()) g2.setColor(accentColor);
-        //DS-addons: Relativize position of the arrow
-        //g2.fillPolygon(new int[]{getWidth() - 5, getWidth() - 10, getWidth() - 15}, new int[]{getHeight() - 24, getHeight() - 19, getHeight() - 24}, 3);
         g2.fillPolygon(new int[]{getWidth() - 5, getWidth() - 10, getWidth() - 15}, new int[]{getHeight()/2 - 3, getHeight()/2 + 3, getHeight()/2 - 3}, 3);
         
-        //DS-addons: use a Line to signal focus
         g2.setColor(accentColor);
         g2.fillRect((int) ((getWidth() - line.getWidth()) / 2), getHeight() - 10, (int) line.getWidth(), 2);
     }
@@ -174,8 +151,6 @@ public class MaterialComboBox<T> extends JComboBox<T> {
 
             g.setFont(Roboto.REGULAR.deriveFont(15f));
             if (selected) {
-                //DS-addons: use an accentColor instead of a hardcoded one
-                //g2.setColor(MaterialColor.PINK_500);
                 g2.setColor(comboBox.accentColor);
             } else {
                 g2.setColor(Color.BLACK);
@@ -254,13 +229,6 @@ public class MaterialComboBox<T> extends JComboBox<T> {
                 @Override
                 protected void paintThumb(Graphics g, JComponent c, Rectangle thumbBounds) {
                     if (!thumbBounds.isEmpty() && this.scrollbar.isEnabled()) {
-                        //DS-addons: Minor changes in the appearance of the scrollbar
-                        //int w = thumbBounds.width;
-                        //int h = thumbBounds.height;
-                        //g.translate(thumbBounds.x, thumbBounds.y);
-                        //g.setColor(MaterialColor.GREY_500);
-                        //g.fillRect(0, 0, w, h);
-                        //g.translate(-thumbBounds.x, -thumbBounds.y);
                         ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                                 RenderingHints.VALUE_ANTIALIAS_ON);
                         boolean isVertical = ScrollBar.this.getOrientation()

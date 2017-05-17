@@ -23,7 +23,6 @@ public class MaterialFormattedTextField extends JFormattedTextField {
     private MaterialTextField.FloatingLabel floatingLabel;
     private MaterialTextField.Line line;
     private String hint = "";
-    //DS-addons: use an accentColor instead of a hardcoded one
     private Color accentColor = MaterialColor.CYAN_500;
 
     /**
@@ -149,7 +148,6 @@ public class MaterialFormattedTextField extends JFormattedTextField {
         repaint();
     }
     
-    //DS-addons: use an accentColor instead of a hardcoded one
     /**
      * Gets the color the label changes to when this {@code materialTextField}
      * is focused.
@@ -169,7 +167,6 @@ public class MaterialFormattedTextField extends JFormattedTextField {
         this.accentColor = accentColor;
         floatingLabel.setAccent(accentColor);
     }
-    //
 
     @Override
     public void setText(String s) {
@@ -219,8 +216,6 @@ public class MaterialFormattedTextField extends JFormattedTextField {
         g2.setColor(MaterialColor.GREY_300);
         g2.fillRect(0, getHeight() - 9, getWidth(), 1);
 
-        //DS-addons: use an accentColor instead of a hardcoded one
-        //g2.setColor(MaterialColor.CYAN_500);
         g2.setColor(accentColor);
         g2.fillRect((int) ((getWidth() - line.getWidth()) / 2), getHeight() - 10, (int) line.getWidth(), 2);
     }

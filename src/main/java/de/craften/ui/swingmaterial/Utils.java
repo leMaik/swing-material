@@ -19,7 +19,6 @@ import java.util.Arrays;
  * @author DragShot
  */
 public class Utils {
-    //DS-addons: Import some utilitary methods from DS Dektop Notify
     /**
      * An integer flag for <code>getScreenSize()</code>.<br/><br/>
      * Values:<br/>
@@ -51,7 +50,6 @@ public class Utils {
                 Method[] meths = sunGE.getDeclaredMethods();
                 useSun2D = -1;
                 for (Method meth:meths) {
-                    //System.out.println(meth.toString());
                     if (meth.getName().equals("getUsableBounds")
                         && Arrays.equals(meth.getParameterTypes(),
                                 new Class[]{java.awt.GraphicsDevice.class})
@@ -106,7 +104,6 @@ public class Utils {
         }
         return nativeTrans;
     }
-    //
     
     /**
      * Determines if a given {@link Color} is dark enough for white text to be

@@ -37,12 +37,10 @@ public class MaterialWindow extends JFrame {
         setUndecorated(true);
         if (Utils.isTranslucencySupported()) {
             setBackground(new Color(255, 255, 255, 0));
-            //DS-addons: This default behavior should NOT be set here!
-            //I mean, I know of the bug but, no... just no.
+            //This default behavior should NOT be set here!
             //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             super.setContentPane((shadowPane = new ShadowPane()));
             contentPane = new JPanel();
-            //shadowPane.setLayout(new BorderLayout());
             shadowPane.add(contentPane);
         } else {
             contentPane = super.getContentPane();
@@ -216,11 +214,9 @@ public class MaterialWindow extends JFrame {
      * MaterialWindow} to be displayed.
      */
     protected class ShadowPane extends JPanel {
-        //DS-addons: Cache for shadows
         private final MaterialShadow shadow;
 
         ShadowPane() {
-            //DS-addons: Cache for shadows
             shadow = new MaterialShadow();
             setLayout(new BorderLayout());
             setOpaque(false);
@@ -232,8 +228,6 @@ public class MaterialWindow extends JFrame {
             Graphics2D g2d = (Graphics2D) g;
             g.clearRect(0, 0, getWidth(), getHeight());
             g2d.setComposite(AlphaComposite.SrcOver);
-            //DS-addons: Cache for shadows
-            //g2d.drawImage(MaterialShadow.renderShadow(getWidth(), getHeight(), 2), 0, 0, null);
             g2d.drawImage(shadow.render(getWidth(), getHeight(), 2, MaterialShadow.Type.SQUARE), 0, 0, null);
 
             g.setClip(new RoundRectangle2D.Float(MaterialShadow.OFFSET_LEFT, MaterialShadow.OFFSET_TOP,

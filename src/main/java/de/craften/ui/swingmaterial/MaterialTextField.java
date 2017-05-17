@@ -23,7 +23,6 @@ public class MaterialTextField extends JTextField {
     private FloatingLabel floatingLabel = new FloatingLabel(this);
     private Line line = new Line(this);
     private String hint = "";
-    //DS-addons: use an accentColor instead of a hardcoded one
     private Color accentColor = MaterialColor.CYAN_500;
 
     /**
@@ -35,7 +34,6 @@ public class MaterialTextField extends JTextField {
         setBorder(null);
         setFont(Roboto.REGULAR.deriveFont(16f));
         floatingLabel.setText("");
-        //DS-addons: Prevent overlapping with other form components
         setOpaque(false);
         setBackground(MaterialColor.TRANSPARENT);
 
@@ -96,7 +94,6 @@ public class MaterialTextField extends JTextField {
         repaint();
     }
     
-    //DS-addons: use an accentColor instead of a hardcoded one
     /**
      * Gets the color the label changes to when this {@code materialTextField}
      * is focused.
@@ -116,7 +113,6 @@ public class MaterialTextField extends JTextField {
         this.accentColor = accentColor;
         floatingLabel.setAccent(accentColor);
     }
-    //
 
     @Override
     public void setText(String s) {
@@ -164,8 +160,6 @@ public class MaterialTextField extends JTextField {
         g2.setColor(MaterialColor.GREY_300);
         g2.fillRect(0, getHeight() - 9, getWidth(), 1);
 
-        //DS-addons: use an accentColor instead of a hardcoded one
-        //g2.setColor(MaterialColor.CYAN_500);
         g2.setColor(accentColor);
         g2.fillRect((int) ((getWidth() - line.getWidth()) / 2), getHeight() - 10, (int) line.getWidth(), 2);
     }
@@ -220,7 +214,6 @@ public class MaterialTextField extends JTextField {
         private final SafePropertySetter.Property<Double> fontSize;
         private final SafePropertySetter.Property<Color> color;
         private String text;
-        //DS-addons: use an accentColor instead of a hardcoded one
         private Color accentColor = MaterialColor.CYAN_500;
 
         FloatingLabel(JTextField target) {
@@ -233,7 +226,6 @@ public class MaterialTextField extends JTextField {
             color = SafePropertySetter.animatableProperty(target, MaterialColor.MIN_BLACK);
         }
 
-        //DS-addons: use an accentColor instead of a hardcoded one
         public Color getAccent() {
             return accentColor;
         }
@@ -241,7 +233,6 @@ public class MaterialTextField extends JTextField {
         public void setAccent(Color accentColor) {
             this.accentColor = accentColor;
         }
-        //
 
         void update() {
             if (animator != null) {
@@ -261,8 +252,6 @@ public class MaterialTextField extends JTextField {
             }
             Color targetColor;
             if (target.getText().isEmpty() && target.isFocusOwner()) {
-                //DS-addons: use an accentColor instead of a hardcoded one
-                //targetColor = MaterialColor.CYAN_500;
                 targetColor = accentColor;
             } else {
                 if (target.getText().isEmpty()) {
