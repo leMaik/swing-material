@@ -33,24 +33,28 @@ public class MaterialWindow extends JFrame {
      * general).
      */
     public MaterialWindow() {
-        super();
         setUndecorated(true);
         if (Utils.isTranslucencySupported()) {
-            setBackground(new Color(255, 255, 255, 0));
+            setBackground(MaterialColor.TRANSPARENT);
             //This default behavior should NOT be set here!
             //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             super.setContentPane((shadowPane = new ShadowPane()));
             contentPane = new JPanel();
+            //shadowPane.setLayout(new BorderLayout());
             shadowPane.add(contentPane);
+            contentPane.setLayout(null);
+            contentPane.setVisible(true);
         } else {
             contentPane = super.getContentPane();
+            contentPane.setLayout(null);
         }
         getRootPane().putClientProperty("Window.shadow", Boolean.FALSE);
         getRootPane().setWindowDecorationStyle(JRootPane.NONE);
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent componentEvent) {
-                setShape(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 3, 3));
+//                if (componentEvent.getComponent() == contentPane)
+                    setShape(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 3, 3));
             }
         });
         light();
@@ -93,6 +97,25 @@ public class MaterialWindow extends JFrame {
     }
     
     /**
+     * {@inheritDoc}
+     * <p/>
+     * <b>NOTE:</b> If this window is casting a shadow, calling this method
+     * might provide unnacurate results unless you take into account the margin
+     * constants found in {@link MaterialShadow}. In order to make things easier
+     * to handle, it is preferable to use {@link #setWindowLocation(int, int)}.
+     * @param x the <i>x</i>-coordinate of the new location's
+     *          top-left corner in the parent's coordinate space
+     * @param y the <i>y</i>-coordinate of the new location's
+     *          top-left corner in the parent's coordinate space
+     * @deprecated use {@link #setWindowLocation(int, int)} instead.
+     */
+    @Override
+    @Deprecated
+    public void setLocation(int x, int y) {
+        super.setLocation(x, y);
+    }
+    
+    /**
      * Alternative method to {@link JFrame#setLocation(int, int)}. Use it to set
      * a new location on screen for this window, this method takes into
      * consideration the shadow offsets so you don't have to worry about it.
@@ -100,11 +123,29 @@ public class MaterialWindow extends JFrame {
      * @param y the y-coordinate of the new location's top-left corner in the desktop
      */
     public void setWindowLocation(int x, int y) {
-        if (shadowPane == null) {
+        if (!isShadowed()) {
             super.setLocation(x, y);
         } else {
             super.setLocation(x - MaterialShadow.OFFSET_LEFT, y - MaterialShadow.OFFSET_TOP);
         }
+    }
+    
+    /**
+     * {@inheritDoc}
+     * <p/>
+     * <b>NOTE:</b> If this window is casting a shadow, calling this method
+     * might provide unnacurate results unless you take into account the margin
+     * constants found in {@link MaterialShadow}. In order to make things easier
+     * to handle, it is preferable to use {@link #setWindowLocation(java.awt.Point)}.
+     * @param p the point defining the top-left corner
+     *          of the new location, given in the coordinate space of this
+     *          component's parent
+     * @deprecated use {@link #setWindowLocation(java.awt.Point)} instead.
+     */
+    @Override
+    @Deprecated
+    public void setLocation(Point p) {
+        super.setLocation(p);
     }
     
     /**
@@ -114,11 +155,22 @@ public class MaterialWindow extends JFrame {
      * @param p the point defining the top-left corner of the new location in the desktop
      */
     public void setWindowLocation(Point p) {
-        if (shadowPane == null) {
-            super.setLocation(p);
-        } else {
-            super.setLocation(p.x - MaterialShadow.OFFSET_LEFT, p.y - MaterialShadow.OFFSET_TOP);
-        }
+        this.setWindowLocation(p.x, p.y);
+    }
+    
+    /**
+     * {@inheritDoc}
+     * <p/>
+     * <b>NOTE:</b> If this window is casting a shadow, calling this method
+     * might provide unnacurate results unless you take into account the margin
+     * constants found in {@link MaterialShadow}. In order to make things easier
+     * to handle, it is preferable to use {@link #getXLocation()}.
+     * @deprecated use {@link #getXLocation()} instead.
+     */
+    @Override
+    @Deprecated
+    public int getX() {
+        return super.getX();
     }
     
     /**
@@ -128,7 +180,22 @@ public class MaterialWindow extends JFrame {
      * @return the current x coordinate of this window's origin
      */
     public int getXLocation() {
-        return super.getX() + (shadowPane == null ? 0:MaterialShadow.OFFSET_LEFT);
+        return super.getX() + (!isShadowed() ? 0:MaterialShadow.OFFSET_LEFT);
+    }
+    
+    /**
+     * {@inheritDoc}
+     * <p/>
+     * <b>NOTE:</b> If this window is casting a shadow, calling this method
+     * might provide unnacurate results unless you take into account the margin
+     * constants found in {@link MaterialShadow}. In order to make things easier
+     * to handle, it is preferable to use {@link #getYLocation()}.
+     * @deprecated use {@link #getYLocation()} instead.
+     */
+    @Override
+    @Deprecated
+    public int getY() {
+        return super.getY();
     }
     
     /**
@@ -138,7 +205,22 @@ public class MaterialWindow extends JFrame {
      * @return the current y coordinate of this window's origin
      */
     public int getYLocation() {
-        return super.getY() + (shadowPane == null ? 0:MaterialShadow.OFFSET_TOP);
+        return super.getY() + (!isShadowed() ? 0:MaterialShadow.OFFSET_TOP);
+    }
+    
+    /**
+     * {@inheritDoc}
+     * <p/>
+     * <b>NOTE:</b> If this window is casting a shadow, calling this method
+     * might provide unnacurate results unless you take into account the margin
+     * constants found in {@link MaterialShadow}. In order to make things easier
+     * to handle, it is preferable to use {@link #getWindowLocation()}.
+     * @deprecated use {@link #getWindowLocation()} instead.
+     */
+    @Override
+    @Deprecated
+    public Point getLocation() {
+        return super.getLocation();
     }
     
     /**
@@ -152,14 +234,44 @@ public class MaterialWindow extends JFrame {
     }
     
     /**
+     * {@inheritDoc}
+     * <p/>
+     * <b>NOTE:</b> If this window is casting a shadow, calling this method
+     * might provide unnacurate results unless you take into account the margin
+     * constants found in {@link MaterialShadow}. In order to make things easier
+     * to handle, it is preferable to use {@link #getWindowWidth()}.
+     * @deprecated use {@link #getWindowWidth()} instead.
+     */
+    @Override
+    @Deprecated
+    public int getWidth() {
+        return super.getWidth();
+    }
+    
+    /**
      * Alternative method to {@link JFrame#getWidth()}. Use it to get the width
      * of this frame in the desktop, excluding any margins present because of
      * the shadow.
      * @return the current width of this window
      */
     public int getWindowWidth() {
-        return super.getWidth() - (shadowPane == null ?
+        return super.getWidth() - (!isShadowed() ?
                 0:MaterialShadow.OFFSET_LEFT+MaterialShadow.OFFSET_RIGHT);
+    }
+    
+    /**
+     * {@inheritDoc}
+     * <p/>
+     * <b>NOTE:</b> If this window is casting a shadow, calling this method
+     * might provide unnacurate results unless you take into account the margin
+     * constants found in {@link MaterialShadow}. In order to make things easier
+     * to handle, it is preferable to use {@link #getWindowHeight()}.
+     * @deprecated use {@link #getWindowHeight()} instead.
+     */
+    @Override
+    @Deprecated
+    public int getHeight() {
+        return super.getHeight();
     }
     
     /**
@@ -169,8 +281,25 @@ public class MaterialWindow extends JFrame {
      * @return the current height of this window
      */
     public int getWindowHeight() {
-        return super.getHeight() - (shadowPane == null ?
+        return super.getHeight() - (!isShadowed() ?
                 0:MaterialShadow.OFFSET_TOP+MaterialShadow.OFFSET_BOTTOM);
+    }
+    
+    /**
+     * {@inheritDoc}
+     * <p/>
+     * <b>NOTE:</b> If this window is casting a shadow, calling this method
+     * might provide unnacurate results unless you take into account the margin
+     * constants found in {@link MaterialShadow}. In order to make things easier
+     * to handle, it is preferable to use {@link #setWindowSize(int, int)}.
+     * @param width  the new width of this component in pixels
+     * @param height the new height of this component in pixels
+     * @deprecated use {@link #setWindowSize(int, int)} instead.
+     */
+    @Override
+    @Deprecated
+    public void setSize(int width, int height) {
+        super.setSize(width, height);
     }
     
     /**
@@ -181,7 +310,7 @@ public class MaterialWindow extends JFrame {
      * @param height the new height for this window
      */
     public void setWindowSize(int width, int height) {
-        if (shadowPane == null) {
+        if (!isShadowed()) {
             super.setSize(width, height);
         } else {
             super.setSize(width 
@@ -189,6 +318,25 @@ public class MaterialWindow extends JFrame {
                 height + MaterialShadow.OFFSET_TOP
                 + MaterialShadow.OFFSET_BOTTOM);
         }
+        if (!isVisible()) {
+            doLayout();
+        }
+    }
+    
+    /**
+     * {@inheritDoc}
+     * <p/>
+     * <b>NOTE:</b> If this window is casting a shadow, calling this method
+     * might provide unnacurate results unless you take into account the margin
+     * constants found in {@link MaterialShadow}. In order to make things easier
+     * to handle, it is preferable to use {@link #setWindowSize(java.awt.Dimension)}.
+     * @param d the dimension specifying the new size of this component
+     * @deprecated use {@link #setWindowSize(java.awt.Dimension)} instead.
+     */
+    @Override
+    @Deprecated
+    public void setSize(Dimension d) {
+        super.setSize(d);
     }
     
     /**
@@ -198,15 +346,29 @@ public class MaterialWindow extends JFrame {
      * @param d a {@link Dimension} representing the new size for this window
      */
     public void setWindowSize(Dimension d) {
-        contentPane.setSize(d);
-        if (shadowPane == null) {
-            super.setSize(d);
-        } else {
-            super.setSize(new Dimension(d.width 
-                    + MaterialShadow.OFFSET_LEFT + MaterialShadow.OFFSET_RIGHT,
-                    d.height + MaterialShadow.OFFSET_TOP
-                    + MaterialShadow.OFFSET_BOTTOM));
-        }
+        //contentPane.setSize(d);
+        this.setWindowSize(d.width, d.height);
+    }
+    
+    @Override
+    public void setExtendedState(int state) {
+        if (shadowPane != null)
+            shadowPane.setDeployed((state & Frame.MAXIMIZED_BOTH) != Frame.MAXIMIZED_BOTH);
+        super.setExtendedState(state);
+    }
+    
+    /**
+     * Use this method to check if this {@code MaterialFrame} is casting a
+     * shadow. This affects how the window is positioned.<br/>
+     * <br/>
+     * For a window to be shadowed, the current GraphicsEnvironment must support
+     * per-pixel translucency. Also, when maximized, the shadow is automatically
+     * hidden so the contents can fill the available area.
+     * @return {@code true} if this window is currently casting a shadow on the
+     *         desktop, {@code false} otherwise.
+     */
+    private boolean isShadowed() {
+        return shadowPane != null && shadowPane.isDeployed();
     }
     
     /**
@@ -215,25 +377,41 @@ public class MaterialWindow extends JFrame {
      */
     protected class ShadowPane extends JPanel {
         private final MaterialShadow shadow;
+        private boolean deployed;
 
         ShadowPane() {
             shadow = new MaterialShadow();
             setLayout(new BorderLayout());
             setOpaque(false);
-            setBorder(new EmptyBorder(MaterialShadow.OFFSET_TOP, MaterialShadow.OFFSET_LEFT, MaterialShadow.OFFSET_BOTTOM, MaterialShadow.OFFSET_RIGHT));
+            setDeployed(true);
+        }
+
+        public boolean isDeployed() {
+            return deployed;
+        }
+
+        public void setDeployed(boolean deployed) {
+            this.deployed = deployed;
+            if (deployed) {
+                setBorder(new EmptyBorder(MaterialShadow.OFFSET_TOP, MaterialShadow.OFFSET_LEFT, MaterialShadow.OFFSET_BOTTOM, MaterialShadow.OFFSET_RIGHT));
+            } else {
+                setBorder(new EmptyBorder(0, 0, 0, 0));
+            }
         }
 
         @Override
         protected void paintComponent(Graphics g) {
-            Graphics2D g2d = (Graphics2D) g;
-            g.clearRect(0, 0, getWidth(), getHeight());
-            g2d.setComposite(AlphaComposite.SrcOver);
-            g2d.drawImage(shadow.render(getWidth(), getHeight(), 2, MaterialShadow.Type.SQUARE), 0, 0, null);
+            if (isDeployed()) {
+                Graphics2D g2d = (Graphics2D) g;
+                g.clearRect(0, 0, getWidth(), getHeight());
+                g2d.setComposite(AlphaComposite.SrcOver);
+                g2d.drawImage(shadow.render(getWidth(), getHeight(), 2, MaterialShadow.Type.SQUARE), 0, 0, null);
 
-            g.setClip(new RoundRectangle2D.Float(MaterialShadow.OFFSET_LEFT, MaterialShadow.OFFSET_TOP,
-                    getWidth() - MaterialShadow.OFFSET_LEFT - MaterialShadow.OFFSET_RIGHT,
-                    getHeight() - MaterialShadow.OFFSET_TOP - MaterialShadow.OFFSET_BOTTOM, 3, 3));
-            super.paintComponent(g);
+                g.setClip(new RoundRectangle2D.Float(MaterialShadow.OFFSET_LEFT, MaterialShadow.OFFSET_TOP,
+                        getWidth() - MaterialShadow.OFFSET_LEFT - MaterialShadow.OFFSET_RIGHT,
+                        getHeight() - MaterialShadow.OFFSET_TOP - MaterialShadow.OFFSET_BOTTOM, 3, 3));
+                super.paintComponent(g);
+            }
         }
     }
 }

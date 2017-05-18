@@ -1,6 +1,5 @@
 package de.craften.ui.swingmaterial;
 
-import de.craften.ui.swingmaterial.fonts.Roboto;
 import de.craften.ui.swingmaterial.util.SafePropertySetter;
 import org.jdesktop.core.animation.timing.Animator;
 import org.jdesktop.core.animation.timing.interpolators.SplineInterpolator;

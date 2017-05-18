@@ -14,55 +14,21 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 
 /**
- * This class provides utilitary methods for Swing Material. These are public
- * and thus can be used directly.
+ * Put miscellaneous utilitary static methods here.
+ * 
  * @author DragShot
  */
 public class Utils {
     /**
-     * A boolean flag for {@code getScreenSize()}, signaling if
-     * {@code sun.java2d.SunGraphicsEnvironment.getUsableBounds()} is available
-     * or not.<br/><br/>
-     * Values:<br/><ul>
-     * <li>{@code true}: Class/method is available.</li>
-     * <li>{@code false}: Class/method is not available.</li></ul>
+     * An integer flag for <code>getScreenSize()</code>.<br/><br/>
+     * Values:<br/>
+     *  0: Check if sun.java2d.SunGraphicsEnvironment.getUsableBounds() is
+     *     available.<br/>
+     *  1: Class/method is available.<br/>
+     * -1: Class/method is not available.
      */
-    private static final boolean useSun2D;
-    /**
-     * If not {@code null}, this contains a reference to
-     * {@code sun.java2d.SunGraphicsEnvironment.getUsableBounds()} via
-     * Reflection.
-     */
-    private static final Method getUsableBounds;
-    
-    static {
-        //Check if sun.java2d.SunGraphicsEnvironment.getUsableBounds()
-        //is available.
-        boolean found = false;
-        Method getMethod = null;
-        try {
-            Class sunGE = Class.forName("sun.java2d.SunGraphicsEnvironment");
-            Method[] meths = sunGE.getDeclaredMethods();
-            for (Method meth:meths) {
-                if (meth.getName().equals("getUsableBounds")
-                    && Arrays.equals(meth.getParameterTypes(),
-                            new Class[]{java.awt.GraphicsDevice.class})
-                    && meth.getExceptionTypes().length == 0
-                    && meth.getReturnType()
-                            .equals(java.awt.Rectangle.class)) {
-                    //We found it!
-                    getMethod = meth;
-                    found = true;
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            //It seems not
-            found = false;
-        }
-        useSun2D = found;
-        getUsableBounds = getMethod;
-    }
+    private static int useSun2D = 0;
+    private static Method getUsableBounds = null;
     
     /**
      * Checks the area available in the desktop, excluding the taskbar.
@@ -75,19 +41,40 @@ public class Utils {
      * @author DragShot
      */
     public static Rectangle getScreenSize(){
-        Rectangle screen;
-        if (useSun2D) { //Use sun.java2d.SunGraphicsEnvironment.getUsableBounds()
+        Rectangle screen = null;
+        if (useSun2D == 0) {
+            //Check if sun.java2d.SunGraphicsEnvironment.getUsableBounds()
+            //is available.
+            try {
+                Class sunGE = Class.forName("sun.java2d.SunGraphicsEnvironment");
+                Method[] meths = sunGE.getDeclaredMethods();
+                useSun2D = -1;
+                for (Method meth:meths) {
+                    if (meth.getName().equals("getUsableBounds")
+                        && Arrays.equals(meth.getParameterTypes(),
+                                new Class[]{java.awt.GraphicsDevice.class})
+                        && meth.getExceptionTypes().length == 0
+                        && meth.getReturnType()
+                                .equals(java.awt.Rectangle.class)) {
+                        //We found it!
+                        getUsableBounds = meth;
+                        useSun2D = 1;
+                        break;
+                    }
+                }
+            } catch (ClassNotFoundException ex) {
+                useSun2D = -1;
+            }
+        } if (useSun2D == 1) { //Use sun.java2d.SunGraphicsEnvironment.getUsableBounds()
             try {
                 Frame frame = new Frame();
                 GraphicsConfiguration config = frame.getGraphicsConfiguration();
                 screen = (Rectangle)getUsableBounds.invoke(null, config.getDevice());
                 frame.dispose();
             } catch (Exception ex) {
-                //If something doesn't work, fallback to Toolkit
-                Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
-                screen = new Rectangle(0, 0, size.width, size.height);
+                useSun2D = -1;
             }
-        } else { //Do it the traditional way
+        } if (useSun2D != 1) { //Do it the traditional way
             Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
             screen = new Rectangle(0, 0, size.width, size.height);
         }
@@ -136,13 +123,6 @@ public class Utils {
         //return (color.getRed()*0.21 + color.getGreen()*0.72 + color.getBlue()*0.07) < (0.54*255);
     }
     
-    /**
-     * Utilitary method for getting a darker version of a provided Color. Unlike
-     * {@link Color#darker()}, this decreases color at a fixed step instead of
-     * a proportional.
-     * @param color the original color
-     * @return a {@link Color} sightly darker than the one input.
-     */
     public static Color darken(Color color) {
         int r = wrapU8B(color.getRed() - 30);
         int g = wrapU8B(color.getGreen() - 30);
@@ -150,13 +130,6 @@ public class Utils {
         return new Color(r, g, b, color.getAlpha());
     }
     
-    /**
-     * Utilitary method for getting a darker version of a provided Color. Unlike
-     * {@link Color#brighter()}, this increases color at a fixed step instead of
-     * a proportional.
-     * @param color the original color
-     * @return a {@link Color} sightly brighter than the one input.
-     */
     public static Color brighten(Color color) {
         int r = wrapU8B(color.getRed() + 30);
         int g = wrapU8B(color.getGreen() + 30);

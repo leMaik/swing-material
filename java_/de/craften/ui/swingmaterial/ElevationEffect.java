@@ -34,7 +34,7 @@ public class ElevationEffect {
 
     /**
      * Gets the elevation level.
-     * @return elevation level [0~5]
+     * @return elevation level (0..5)
      */
     public int getLevel() {
         return targetLevel;
@@ -42,7 +42,7 @@ public class ElevationEffect {
 
     /**
      * Sets the elevation level.
-     * @param level elevation level [0~5]
+     * @param level elevation level (0..5)
      */
     public void setLevel(int level) {
         if (level != targetLevel) {
@@ -89,7 +89,7 @@ public class ElevationEffect {
      * }
      * </code>
      * @param target the target of the resulting {@code ElevationEffect}
-     * @param level  the initial elevation level [0~5]
+     * @param level  the initial elevation level (0..5)
      * @return an {@code ElevationEffect} object providing support for painting
      *         ripples
      */
@@ -114,7 +114,7 @@ public class ElevationEffect {
      * }
      * </code>
      * @param target the target of the resulting {@code ElevationEffect}
-     * @param level  the initial elevation level [0~5]
+     * @param level  the initial elevation level (0..5)
      * @return an {@code ElevationEffect} object providing support for painting
      *         ripples
      */

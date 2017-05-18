@@ -31,6 +31,7 @@ public class MaterialPanel extends JPanel {
      * supported constructor from JPanel.
      */
     public MaterialPanel() {
+        super();
         elevation = ElevationEffect.applyTo(this, 1);
         setBorder(new EmptyBorder(MaterialShadow.OFFSET_TOP, MaterialShadow.OFFSET_LEFT, MaterialShadow.OFFSET_BOTTOM, MaterialShadow.OFFSET_RIGHT));
     }
@@ -40,7 +41,8 @@ public class MaterialPanel extends JPanel {
      * animated transition if the component is currently visible, so it is
      * incorrect to assume the returned value will reflect how the resulting
      * shadow looks right now.
-     * @return elevation level [0~5]
+     *
+     * @return elevation level (0..5)
      * @see ElevationEffect
      */
     public int getElevation() {
@@ -52,7 +54,8 @@ public class MaterialPanel extends JPanel {
      * animated transition if the component is currently visible, so it will
      * take a little while for the resulting shadow to reflect the level once
      * it is set.
-     * @param elevation elevation level [0~5]
+     *
+     * @param elevation elevation level (1..5)
      * @see ElevationEffect
      */
     public void setElevation(int elevation) {
@@ -66,9 +69,9 @@ public class MaterialPanel extends JPanel {
      * depending of how bright or dark is the chosen background color.
      * <p/>
      * <b>NOTE:</b> It is up to the look and feel to honor this property, some
-     * may choose to ignore it. To avoid any conflicts, using the
-     * <a href="https://docs.oracle.com/javase/7/docs/api/javax/swing/plaf/metal/package-summary.html">
-     * Metal Look and Feel</a> is recommended.
+     * may choose to ignore it. To avoid any conflicts, using the Metal L&F is
+     * recommended.
+     *
      * @param bg the desired background <code>Color</code>
      */
     @Override

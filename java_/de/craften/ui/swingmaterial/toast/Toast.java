@@ -1,6 +1,6 @@
 package de.craften.ui.swingmaterial.toast;
 
-import de.craften.ui.swingmaterial.fonts.Roboto;
+import de.craften.ui.swingmaterial.Roboto;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +28,6 @@ public abstract class Toast extends JComponent {
      *
      * @param g graphics canvas
      */
-    @Override
     public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
