@@ -76,18 +76,7 @@ public class ElevationEffect {
     /**
      * Creates an elevation effect for the given component. Each component is
      * responsible of calling {@link #paint(Graphics)} in order to display the
-     * effect. Here's an example of how the ripple effect can be used:
-     * <p/>
-     * <code>
-     * protected void paintComponent(Graphics g) {<br/>
-     *     super.paintComponent(g);<br/>
-     *     if (isEnabled()) {<br/>
-     *          g.setClip(new Rectangle2D.Float(0, 0, getWidth(), getHeight()));<br/>
-     *          g.setColor(myRippleColor);<br/>
-     *          ripple.paint(g);<br/>
-     *     }<br/>
-     * }
-     * </code>
+     * effect.
      * @param target the target of the resulting {@code ElevationEffect}
      * @param level  the initial elevation level [0~5]
      * @return an {@code ElevationEffect} object providing support for painting
@@ -100,19 +89,7 @@ public class ElevationEffect {
     /**
      * Creates an elevation effect with a circular shadow for the given
      * component. Each component is responsible of calling {@link
-     * #paint(Graphics)} in order to display the effect. Here's an example of
-     * how the ripple effect can be used:
-     * <p/>
-     * <code>
-     * protected void paintComponent(Graphics g) {<br/>
-     *     super.paintComponent(g);<br/>
-     *     if (isEnabled()) {<br/>
-     *          g.setClip(new Rectangle2D.Float(0, 0, getWidth(), getHeight()));<br/>
-     *          g.setColor(myRippleColor);<br/>
-     *          ripple.paint(g);<br/>
-     *     }<br/>
-     * }
-     * </code>
+     * #paint(Graphics)} in order to display the effect.
      * @param target the target of the resulting {@code ElevationEffect}
      * @param level  the initial elevation level [0~5]
      * @return an {@code ElevationEffect} object providing support for painting

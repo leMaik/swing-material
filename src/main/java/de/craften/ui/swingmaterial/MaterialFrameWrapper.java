@@ -33,21 +33,35 @@ public class MaterialFrameWrapper {
         this.frame = frame;
         titleBar = new MaterialTitleBar(frame);
     }
-
-//    protected MaterialTitleBar getTitleBar() {
-//        return titleBar;
-//    }
     
+    /**
+     * Wraps the decorators bundled with this {@code MaterialFrameWrapper}
+     * around the target frame's container panel. This is called by the frame
+     * once its container panel is set and in place.
+     * @param contentPane 
+     */
     public void wrapAround(Container contentPane) {
         Container root = contentPane.getParent();
         root.add(titleBar);
         titleBar.setVisible(true);
     }
     
+    /**
+     * Sets the default color of this wrapper. This affects the decorations
+     * bundled with it, like the title bar and control buttons.
+     * @param color the new color of this wrapper.
+     * @see MaterialFrame#setColor(java.awt.Color)
+     */
     public void setColor(Color color) {
         titleBar.setBackground(color);
     }
     
+    /**
+     * Gets the default color of this wrapper. More precisely, the color of the
+     * decorations bundled with it, like the title bar and control buttons.
+     * @return the current color of this wrapper.
+     * @see MaterialFrame#getColor()
+     */
     public Color getColor() {
         return titleBar.getBackground();
     }
@@ -133,7 +147,8 @@ public class MaterialFrameWrapper {
             titleLabel.setFont(Roboto.MEDIUM.deriveFont(24f));
             add(titleLabel);
             titleLabel.setVisible(true);
-            setSize(640, 48);
+            setMinimumSize(new java.awt.Dimension(48, 48));
+            setSize(48, 48);
             MouseAdapter mouseon = getControlListener();
             addMouseListener(mouseon);
             addMouseMotionListener(mouseon);
@@ -182,46 +197,40 @@ public class MaterialFrameWrapper {
         @Override
         public void doLayout() {
             boolean max = (control.getFrameState() & Frame.MAXIMIZED_BOTH) == Frame.MAXIMIZED_BOTH;
+            int hpad = MaterialShadow.OFFSET_LEFT + MaterialShadow.OFFSET_RIGHT;
+            int vpad = MaterialShadow.OFFSET_TOP + MaterialShadow.OFFSET_BOTTOM;
             btnClose.setBounds(this.getWidth() - 48 - MaterialShadow.OFFSET_LEFT - 10,
-                0 - MaterialShadow.OFFSET_TOP,
-                48 + MaterialShadow.OFFSET_LEFT + MaterialShadow.OFFSET_RIGHT,
-                24 + MaterialShadow.OFFSET_TOP + MaterialShadow.OFFSET_BOTTOM);
+                0 - MaterialShadow.OFFSET_TOP, 48 + hpad, 24 + vpad);
             if (control.isFrameResizable()) {
                 if (max) {
                     btnRestore.setBounds(this.getWidth() - 78 - MaterialShadow.OFFSET_LEFT - 10,
-                        0 - MaterialShadow.OFFSET_TOP,
-                        30 + MaterialShadow.OFFSET_LEFT + MaterialShadow.OFFSET_RIGHT,
-                        24 + MaterialShadow.OFFSET_TOP + MaterialShadow.OFFSET_BOTTOM);
+                        0 - MaterialShadow.OFFSET_TOP, 30 + hpad, 24 + vpad);
                     btnMaximize.setBounds(0,0,0,0);
                     btnMaximize.setVisible(false);
                     btnRestore.setVisible(true);
                 } else {
                     btnMaximize.setBounds(this.getWidth() - 78 - MaterialShadow.OFFSET_LEFT - 10,
-                        0 - MaterialShadow.OFFSET_TOP,
-                        30 + MaterialShadow.OFFSET_LEFT + MaterialShadow.OFFSET_RIGHT,
-                        24 + MaterialShadow.OFFSET_TOP + MaterialShadow.OFFSET_BOTTOM);
+                        0 - MaterialShadow.OFFSET_TOP, 30 + hpad, 24 + vpad);
                     btnRestore.setBounds(0,0,0,0);
                     btnMaximize.setVisible(true);
                     btnRestore.setVisible(false);
                 }
                 btnMinimize.setBounds(this.getWidth() - 108 - MaterialShadow.OFFSET_LEFT - 10,
-                    0 - MaterialShadow.OFFSET_TOP,
-                    30 + MaterialShadow.OFFSET_LEFT + MaterialShadow.OFFSET_RIGHT,
-                    24 + MaterialShadow.OFFSET_TOP + MaterialShadow.OFFSET_BOTTOM);
+                    0 - MaterialShadow.OFFSET_TOP, 30 + hpad, 24 + vpad);
             } else {
                 btnMinimize.setBounds(this.getWidth() - 78 - MaterialShadow.OFFSET_LEFT - 10,
-                    0 - MaterialShadow.OFFSET_TOP,
-                    30 + MaterialShadow.OFFSET_LEFT + MaterialShadow.OFFSET_RIGHT,
-                    24 + MaterialShadow.OFFSET_TOP + MaterialShadow.OFFSET_BOTTOM);
+                    0 - MaterialShadow.OFFSET_TOP, 30 + hpad, 24 + vpad);
                 btnMaximize.setBounds(0,0,0,0);
                 btnMaximize.setVisible(false);
                 btnRestore.setBounds(0,0,0,0);
                 btnRestore.setVisible(false);
             }
             titleLabel.setBounds(MaterialShadow.OFFSET_LEFT, 0,
-                this.getWidth() - MaterialShadow.OFFSET_TOP
-                - btnClose.getWidth() - btnRestore.getWidth()
-                - btnMaximize.getWidth() - btnMinimize.getWidth(), 48);
+                this.getWidth() - MaterialShadow.OFFSET_TOP*2
+                - (btnClose.getWidth()-MaterialShadow.OFFSET_LEFT)
+                - Math.max(btnRestore.getWidth()-hpad,0)
+                - Math.max(btnMaximize.getWidth()-hpad,0)
+                - (btnMinimize.getWidth()-hpad), getMinimumSize().height);
         }
         
         private MouseAdapter getControlListener() {

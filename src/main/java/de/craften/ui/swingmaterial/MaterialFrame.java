@@ -2,7 +2,6 @@ package de.craften.ui.swingmaterial;
 
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.Frame;
 import java.awt.event.WindowEvent;
 import javax.swing.JPanel;
 
@@ -16,7 +15,7 @@ import javax.swing.JPanel;
  */
 public class MaterialFrame extends MaterialWindow {
     /** The wrapper providing Frame appearance and behavior. */
-    MaterialFrameWrapper wrapper;
+    private MaterialFrameWrapper wrapper;
     /** The panel containing the components placed inside this frame. */
     private Container contentPane;
     
@@ -47,10 +46,22 @@ public class MaterialFrame extends MaterialWindow {
         wrapper.updateTitle();
     }
     
+    /**
+     * Sets the default color of this frame. This affects the decorations around
+     * it.
+     * @param color the new color of this frame.
+     * @see MaterialFrameWrapper#setColor(java.awt.Color)
+     */
     public void setColor(Color color) {
         wrapper.setColor(color);
     }
     
+    /**
+     * Gets the default color of this frame. More precisely, the color of the
+     * decorations around it.
+     * @return the current color of this frame.
+     * @see MaterialFrameWrapper#getColor()
+     */
     public Color getColor() {
         return wrapper.getColor();
     }

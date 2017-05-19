@@ -952,6 +952,16 @@ public class MaterialIcons {
         } catch (IOException | FontFormatException e) {
             throw new RuntimeException("Could not load " + resourceName, e);
         }
+        //JDK 6 compatible
+//        try {
+//            Font font;
+//            InputStream inputStream = MaterialIcons.class.getResourceAsStream("/fonts/" + resourceName);
+//            font = Font.createFont(Font.TRUETYPE_FONT, inputStream);
+//            inputStream.close();
+//            return font;
+//        } catch (Exception e) {
+//            throw new RuntimeException("Could not load " + resourceName, e);
+//        }
     }
     
     /*public static void main(String[] args) throws Exception {

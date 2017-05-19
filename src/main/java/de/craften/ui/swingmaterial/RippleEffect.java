@@ -34,8 +34,20 @@ public class RippleEffect {
     }
 
     /**
-     * Paints this effect.
-     *
+     * Paints this effect. Each component is responsible of calling {@link
+     * #paint(Graphics)} in order to display the effect. Here's an example of
+     * how the ripple effect can be used:
+     * <p/>
+     * <code>
+     * protected void paintComponent(Graphics g) {<br/>
+     *     super.paintComponent(g);<br/>
+     *     if (isEnabled()) {<br/>
+     *          g.setClip(new Rectangle2D.Float(0, 0, getWidth(), getHeight()));<br/>
+     *          g.setColor(myRippleColor);<br/>
+     *          ripple.paint(g);<br/>
+     *     }<br/>
+     * }
+     * </code>
      * @param g canvas
      */
     public void paint(Graphics g) {
@@ -64,9 +76,20 @@ public class RippleEffect {
     }
 
     /**
-     * Creates a ripple effect for the given component. You need to call {@link #paint(Graphics)} in your
-     * drawing method to actually paint this effect.
-     *
+     * Creates a ripple effect for the given component. Each component is
+     * responsible of calling {@link #paint(Graphics)} in order to display the
+     * effect. Here's an example of how the ripple effect can be used:
+     * <p/>
+     * <code>
+     * protected void paintComponent(Graphics g) {<br/>
+     *     super.paintComponent(g);<br/>
+     *     if (isEnabled()) {<br/>
+     *          g.setClip(new Rectangle2D.Float(0, 0, getWidth(), getHeight()));<br/>
+     *          g.setColor(myRippleColor);<br/>
+     *          ripple.paint(g);<br/>
+     *     }<br/>
+     * }
+     * </code>
      * @param target target component
      * @return ripple effect for that component
      * @see MaterialButton for an example of how the ripple effect is used
@@ -83,9 +106,21 @@ public class RippleEffect {
     }
 
     /**
-     * Creates a ripple effect for the given component that is limited to the component's size and will always start
-     * in the center. You need to call {@link #paint(Graphics)} in your drawing method to actually paint this effect.
-     *
+     * Creates a ripple effect for the given component that is limited to the
+     * component's size and will always start in the center. Each component is
+     * responsible of calling {@link #paint(Graphics)} in order to display the
+     * effect. Here's an example of how the ripple effect can be used:
+     * <p/>
+     * <code>
+     * protected void paintComponent(Graphics g) {<br/>
+     *     super.paintComponent(g);<br/>
+     *     if (isEnabled()) {<br/>
+     *          g.setClip(new Rectangle2D.Float(0, 0, getWidth(), getHeight()));<br/>
+     *          g.setColor(myRippleColor);<br/>
+     *          ripple.paint(g);<br/>
+     *     }<br/>
+     * }
+     * </code>
      * @param target target component
      * @return ripple effect for that component
      * @see MaterialButton for an example of how the ripple effect is used

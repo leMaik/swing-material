@@ -53,8 +53,7 @@ public class MaterialWindow extends JFrame {
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent componentEvent) {
-//                if (componentEvent.getComponent() == contentPane)
-                    setShape(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 3, 3));
+                setShape(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 3, 3));
             }
         });
         light();
@@ -78,7 +77,7 @@ public class MaterialWindow extends JFrame {
      * @return this window
      */
     public MaterialWindow dark() {
-        getContentPane().setBackground(MaterialColor.GREY_900);
+        getContentPane().setBackground(MaterialColor.GREY_850);
         getContentPane().setForeground(MaterialColor.WHITE);
         return this;
     }
@@ -175,7 +174,7 @@ public class MaterialWindow extends JFrame {
     
     /**
      * Alternative method to {@link JFrame#getX()}. Use it to get the location
-     * of this frame in the desktop, excluding any margins present because of
+     * of this window in the desktop, excluding any margins present because of
      * the shadow.
      * @return the current x coordinate of this window's origin
      */
@@ -200,7 +199,7 @@ public class MaterialWindow extends JFrame {
     
     /**
      * Alternative method to {@link JFrame#getY()}. Use it to get the location
-     * of this frame in the desktop, excluding any margins present because of
+     * of this window in the desktop, excluding any margins present because of
      * the shadow.
      * @return the current y coordinate of this window's origin
      */
@@ -225,7 +224,7 @@ public class MaterialWindow extends JFrame {
     
     /**
      * Alternative method to {@link JFrame#getLocation()}. Use it to get the
-     * location of this frame in the desktop, excluding any margins present
+     * location of this window in the desktop, excluding any margins present
      * because of the shadow.
      * @return the current location of this window's origin
      */
@@ -250,7 +249,7 @@ public class MaterialWindow extends JFrame {
     
     /**
      * Alternative method to {@link JFrame#getWidth()}. Use it to get the width
-     * of this frame in the desktop, excluding any margins present because of
+     * of this window in the desktop, excluding any margins present because of
      * the shadow.
      * @return the current width of this window
      */
@@ -276,7 +275,7 @@ public class MaterialWindow extends JFrame {
     
     /**
      * Alternative method to {@link JFrame#getHeight()}. Use it to get the
-     * height of this frame in the desktop, excluding any margins present
+     * height of this window in the desktop, excluding any margins present
      * because of the shadow.
      * @return the current height of this window
      */
@@ -348,6 +347,36 @@ public class MaterialWindow extends JFrame {
     public void setWindowSize(Dimension d) {
         //contentPane.setSize(d);
         this.setWindowSize(d.width, d.height);
+    }
+    
+    /**
+     * {@inheritDoc}
+     * <p/>
+     * <b>NOTE:</b> If this window is casting a shadow, calling this method
+     * might provide unnacurate results unless you take into account the margin
+     * constants found in {@link MaterialShadow}. In order to make things easier
+     * to handle, it is preferable to use {@link #getWindowSize()}.
+     * @return a {@link Dimension} object that indicates the size of this window
+     * @deprecated use {@link #getWindowSize()} instead.
+     */
+    @Override
+    @Deprecated
+    public Dimension getSize() {
+        return super.getSize();
+    }
+    
+    /**
+     * Alternative method to {@link JFrame#setSize(java.awt.Dimension)}, returns
+     * the size of this window in the form of a {@link Dimension} object. Use it
+     * to get the size of this window in the desktop, excluding any margins that
+     * could be present because of the shadow. The {@code height} field of the
+     * {@code Dimension} object contains this window's height, and the
+     * {@code width} field contains this window's width.
+     * @return a {@link Dimension} object that indicates the size of this window
+     * @see #setWindowSize
+     */
+    public Dimension getWindowSize() {
+        return new Dimension(getWindowWidth(), getWindowHeight());
     }
     
     @Override
