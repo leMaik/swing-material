@@ -76,11 +76,17 @@ public class ElevationEffect {
     /**
      * Creates an elevation effect for the given component. Each component is
      * responsible of calling {@link #paint(Graphics)} in order to display the
-     * effect.
+     * effect. For this to work, there should be an offset between the contents
+     * of the component and its actual bounds, these values can be found in
+     * {@link MaterialShadow}.
      * @param target the target of the resulting {@code ElevationEffect}
      * @param level  the initial elevation level [0~5]
      * @return an {@code ElevationEffect} object providing support for painting
      *         ripples
+     * @see MaterialShadow#OFFSET_TOP
+     * @see MaterialShadow#OFFSET_BOTTOM
+     * @see MaterialShadow#OFFSET_LEFT
+     * @see MaterialShadow#OFFSET_RIGHT
      */
     public static ElevationEffect applyTo(JComponent target, int level) {
         return new ElevationEffect(target, level);
@@ -89,11 +95,17 @@ public class ElevationEffect {
     /**
      * Creates an elevation effect with a circular shadow for the given
      * component. Each component is responsible of calling {@link
-     * #paint(Graphics)} in order to display the effect.
+     * #paint(Graphics)} in order to display the effect. For this to work,
+     * there should be an offset between the contents of the component and its
+     * actual bounds, these values can be found in {@link MaterialShadow}.
      * @param target the target of the resulting {@code ElevationEffect}
      * @param level  the initial elevation level [0~5]
      * @return an {@code ElevationEffect} object providing support for painting
      *         ripples
+     * @see MaterialShadow#OFFSET_TOP
+     * @see MaterialShadow#OFFSET_BOTTOM
+     * @see MaterialShadow#OFFSET_LEFT
+     * @see MaterialShadow#OFFSET_RIGHT
      */
     public static ElevationEffect applyCirularTo(JComponent target, int level) {
         return new ElevationEffect.Circular(target, level);
