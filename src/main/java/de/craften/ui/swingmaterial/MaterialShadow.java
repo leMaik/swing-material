@@ -174,7 +174,7 @@ public class MaterialShadow {
         FastGaussianBlur.blur(shadow, radius);
     }
     
-    private int pWd, pHt;
+    private int pWd, pHt, pRd;
     private double pLv;
     private Type pTp;
     private BufferedImage shadowBg;
@@ -218,7 +218,7 @@ public class MaterialShadow {
      * @see Type#CIRCULAR
      */
     public BufferedImage render(int width, int height, int radius, double level, Type type) {
-        if (pWd != width || pHt != height || pLv != level || pTp != type) {
+        if (pWd != width || pHt != height || pRd != radius || pLv != level || pTp != type) {
             switch (type) {
                 case SQUARE:
                     shadowBg = MaterialShadow.renderShadow(width, height, level, radius);
@@ -229,6 +229,7 @@ public class MaterialShadow {
             }
             pWd = width;
             pHt = height;
+            pRd = radius;
             pLv = level;
             pTp = type;
         }
