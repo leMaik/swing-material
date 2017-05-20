@@ -20,6 +20,7 @@ public class ElevationEffect {
     protected int targetLevel = 0;
 
     protected final MaterialShadow shadow;
+    protected int borderRadius = 3;
 
     private ElevationEffect(final JComponent component, int level) {
         this.target = component;
@@ -45,21 +46,46 @@ public class ElevationEffect {
      * @param level elevation level [0~5]
      */
     public void setLevel(int level) {
-        if (level != targetLevel) {
-            if (animator != null) {
-                animator.stop();
+        if (target.isShowing()) {
+            if (level != targetLevel) {
+                if (animator != null) {
+                    animator.stop();
+                }
+                animator = new Animator.Builder(timer)
+                        .setDuration(500, TimeUnit.MILLISECONDS)
+                        .setEndBehavior(Animator.EndBehavior.HOLD)
+                        .setInterpolator(new SplineInterpolator(0.55, 0, 0.1, 1))
+                        .addTarget(SafePropertySetter.getTarget(this.level, this.level.getValue(), (double) level))
+                        .build();
+                animator.start();
+            } else {
+                animator = null;
             }
-            animator = new Animator.Builder(timer)
-                    .setDuration(500, TimeUnit.MILLISECONDS)
-                    .setEndBehavior(Animator.EndBehavior.HOLD)
-                    .setInterpolator(new SplineInterpolator(0.55, 0, 0.1, 1))
-                    .addTarget(SafePropertySetter.getTarget(this.level, this.level.getValue(), (double) level))
-                    .build();
-            animator.start();
         } else {
             animator = null;
+            this.level.setValue((double)level);
         }
         targetLevel = level;
+    }
+
+    /**
+     * Gets the current border radius of the component casting a shadow. This
+     * should be updated by the target component if such a property exists for
+     * it and is modified.
+     * @return the current border radius casted on the shadow, in pixels.
+     */
+    public int getBorderRadius() {
+        return borderRadius;
+    }
+
+    /**
+     * Sets the current border radius of the component casting a shadow. This
+     * should be updated by the target component if such a property exists for
+     * it and is modified.
+     * @param borderRadius the new border radius casted on the shadow, in pixels.
+     */
+    public void setBorderRadius(int borderRadius) {
+        this.borderRadius = borderRadius;
     }
     
     /**
@@ -70,7 +96,7 @@ public class ElevationEffect {
         Graphics2D g2 = (Graphics2D) g;
         g2.setBackground(target.getParent().getBackground());
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-        g.drawImage(shadow.render(target.getWidth(), target.getHeight(), level.getValue(), MaterialShadow.Type.SQUARE), 0, 0, null);
+        g.drawImage(shadow.render(target.getWidth(), target.getHeight(), borderRadius, level.getValue(), MaterialShadow.Type.SQUARE), 0, 0, null);
     }
 
     /**
@@ -121,7 +147,7 @@ public class ElevationEffect {
 
         @Override
         public void paint(Graphics g) {
-            g.drawImage(shadow.render(target.getWidth(), target.getHeight(), level.getValue(), MaterialShadow.Type.CIRCULAR), 0, 0, null);
+            g.drawImage(shadow.render(target.getWidth(), target.getHeight(), borderRadius, level.getValue(), MaterialShadow.Type.CIRCULAR), 0, 0, null);
         }
     }
 }

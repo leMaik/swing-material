@@ -1,5 +1,6 @@
 package de.craften.ui.swingmaterial;
 
+import static de.craften.ui.swingmaterial.MaterialTextField.HINT_OPACITY_MASK;
 import de.craften.ui.swingmaterial.fonts.Roboto;
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -101,7 +102,7 @@ public class MaterialComboBox<T> extends JComboBox<T> {
         g.fillRect(0, 0, getWidth(), getHeight());
 
         g.setFont(Roboto.REGULAR.deriveFont(16f));
-        g.setColor(getSelectedItem() == null ? MaterialColor.MIN_BLACK:getForeground());
+        g.setColor(getSelectedItem() == null ? new Color(getForeground().getRGB() & 0x00FFFFFF | HINT_OPACITY_MASK, true):getForeground());
         FontMetrics metrics = g.getFontMetrics(g.getFont());
         String text = getSelectedItem() != null ? getSelectedItem().toString() : (hint != null ? hint:"");
         g.drawString(text, 0, metrics.getAscent() + (getHeight() - metrics.getHeight()) / 2);

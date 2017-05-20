@@ -20,7 +20,6 @@ public class MaterialFrame extends MaterialWindow {
     private Container contentPane;
     
     public MaterialFrame() {
-        super();
         contentPane = new JPanel();
         contentPane.setLayout(null);
         super.getContentPane().add(contentPane);

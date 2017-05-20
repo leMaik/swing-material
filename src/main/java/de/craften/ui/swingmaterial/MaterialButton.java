@@ -22,6 +22,7 @@ public class MaterialButton extends JButton {
     private boolean isMouseOver = false;
     private Color rippleColor = Color.WHITE;
     private Cursor cursor = super.getCursor();
+    private int borderRadius = 3;
 
     /**
      * Creates a new button.
@@ -112,7 +113,6 @@ public class MaterialButton extends JButton {
 
     /**
      * Gets the ripple color.
-     *
      * @return the ripple color
      */
     public Color getRippleColor() {
@@ -121,11 +121,29 @@ public class MaterialButton extends JButton {
 
     /**
      * Sets the ripple color. You should only do this for flat buttons.
-     *
      * @param rippleColor the ripple color
      */
     public void setRippleColor(Color rippleColor) {
         this.rippleColor = rippleColor;
+    }
+
+    /**
+     * Gets the current border radius of this button.
+     * @return the current border radius of this button, in pixels.
+     */
+    public int getBorderRadius() {
+        return borderRadius;
+    }
+
+    /**
+     * Sets the border radius of this button. You can define a custom radius in
+     * order to get some rounded corners in your button, making it look like a
+     * pill or even a circular action button.
+     * @param borderRadius the new border radius of this button, in pixels.
+     */
+    public void setBorderRadius(int borderRadius) {
+        this.borderRadius = borderRadius;
+        elevation.setBorderRadius(borderRadius);
     }
 
     @Override
@@ -179,16 +197,16 @@ public class MaterialButton extends JButton {
 
         if (isEnabled()) {
             g2.setColor(getBackground());
-            g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - offset_lr, getHeight() - offset_td, 3, 3));
+            g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - offset_lr, getHeight() - offset_td, borderRadius*2, borderRadius*2));
 
             g2.setColor(new Color(rippleColor.getRed() / 255f, rippleColor.getBlue() / 255f, rippleColor.getBlue() / 255f, 0.12f));
             if ((type == Type.FLAT && isMouseOver) || isFocusOwner()) {
-                g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - offset_lr, getHeight() - offset_td, 3, 3));
+                g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - offset_lr, getHeight() - offset_td, borderRadius*2, borderRadius*2));
             }
         } else {
             Color bg = getBackground();
             g2.setColor(new Color(bg.getRed() / 255f, bg.getGreen() / 255f, bg.getBlue() / 255f, 0.6f));
-            g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - offset_lr, getHeight() - offset_td, 3, 3));
+            g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - offset_lr, getHeight() - offset_td, borderRadius*2, borderRadius*2));
         }
 
         FontMetrics metrics = g.getFontMetrics(getFont());
@@ -204,7 +222,7 @@ public class MaterialButton extends JButton {
         g2.drawString(getText().toUpperCase(), x, y);
 
         if (isEnabled()) {
-            g2.setClip(new RoundRectangle2D.Float(0, 0, getWidth() - offset_lr, getHeight() - offset_td, 3, 3));
+            g2.setClip(new RoundRectangle2D.Float(0, 0, getWidth() - offset_lr, getHeight() - offset_td, Math.max(borderRadius*2 - 4, 0), Math.max(borderRadius*2 - 4, 0)));
             g2.setColor(rippleColor);
             ripple.paint(g2);
         }

@@ -76,7 +76,7 @@ public class MaterialShadow {
             .addFrame(10f, 4 / 5.0)
             .addFrame(15f, 5 / 5.0)
             .build();
-
+    
     /**
      * Creates a {@link BufferedImage} containing a shadow projected from a
      * square component of the given width and height.
@@ -88,6 +88,21 @@ public class MaterialShadow {
      *         circular component of the given radius.
      */
     public static BufferedImage renderShadow(int width, int height, double level) {
+        return renderShadow(width, height, level, 3);
+    }
+
+    /**
+     * Creates a {@link BufferedImage} containing a shadow projected from a
+     * square component of the given width and height.
+     *
+     * @param width  the component's width, inpixels
+     * @param height the component's height, inpixels
+     * @param level  the elevation level [0~5]
+     * @param borderRadius an applicable radius to the border of the shadow
+     * @return A {@link BufferedImage} with the contents of the shadow for a
+     *         circular component of the given radius.
+     */
+    public static BufferedImage renderShadow(int width, int height, double level, int borderRadius) {
         if (level < 0 || level > 5) {
             throw new IllegalArgumentException("Shadow level must be between 1 and 5 (inclusive)");
         }
@@ -99,9 +114,9 @@ public class MaterialShadow {
             g.setComposite(AlphaComposite.SrcOver);
 
             makeShadow(shadow, opacity1.getInterpolatedValueAt(level / 5), radius1.getInterpolatedValueAt(level / 5),
-                    0, offset1.getInterpolatedValueAt(level / 5));
+                    0, offset1.getInterpolatedValueAt(level / 5), borderRadius);
             makeShadow(shadow2, opacity2.getInterpolatedValueAt(level / 5), radius2.getInterpolatedValueAt(level / 5),
-                    0, offset2.getInterpolatedValueAt(level / 5));
+                    0, offset2.getInterpolatedValueAt(level / 5), borderRadius);
             g.drawImage(shadow2, 0, 0, null);
 
             g.dispose();
@@ -141,11 +156,11 @@ public class MaterialShadow {
         return shadow;
     }
 
-    private static void makeShadow(BufferedImage shadow, float opacity, float radius, float leftOffset, float topOffset) {
+    private static void makeShadow(BufferedImage shadow, float opacity, float radius, float leftOffset, float topOffset, int borderRadius) {
         Graphics2D g2 = shadow.createGraphics();
         g2.setColor(new Color(0, 0, 0, opacity));
         g2.fill(new RoundRectangle2D.Float(OFFSET_LEFT + leftOffset, OFFSET_TOP + topOffset,
-                shadow.getWidth() - OFFSET_LEFT - OFFSET_RIGHT, shadow.getHeight() - OFFSET_TOP - OFFSET_BOTTOM, 3, 3));
+                shadow.getWidth() - OFFSET_LEFT - OFFSET_RIGHT, shadow.getHeight() - OFFSET_TOP - OFFSET_BOTTOM, borderRadius*2, borderRadius*2));
         g2.dispose();
         FastGaussianBlur.blur(shadow, radius);
     }
@@ -191,17 +206,22 @@ public class MaterialShadow {
      * returns it. A copy of the latest render is kept in case a shadow of the
      * same dimensions and elevation is needed in order to decrease CPU usage
      * when the component is idle.
-     * @param width  the witdh
-     * @param height 
-     * @param level  
-     * @param type   
-     * @return 
+     * @param width  the witdh of the square component casting a shadow, or
+     *               diameter if it is circular.
+     * @param height the height of the square component casting a shadow.
+     * @param radius the radius of the borders of a square component casting a
+     *               shadow.
+     * @param level  the depth of the shadow [0~5]
+     * @param type   the type of projected shadow, either square or circular
+     * @return A {@link BufferedImage} with the contents of the shadow.
+     * @see Type#SQUARE
+     * @see Type#CIRCULAR
      */
-    public BufferedImage render(int width, int height, double level, Type type) {
+    public BufferedImage render(int width, int height, int radius, double level, Type type) {
         if (pWd != width || pHt != height || pLv != level || pTp != type) {
             switch (type) {
                 case SQUARE:
-                    shadowBg = MaterialShadow.renderShadow(width, height, level);
+                    shadowBg = MaterialShadow.renderShadow(width, height, level, radius);
                     break;
                 case CIRCULAR:
                     shadowBg = MaterialShadow.renderCircularShadow(width, level);

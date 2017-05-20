@@ -81,6 +81,9 @@ public class MaterialPanel extends JPanel {
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         elevation.paint(g);
+        g.setClip(MaterialShadow.OFFSET_LEFT, MaterialShadow.OFFSET_TOP,
+            getWidth() - MaterialShadow.OFFSET_LEFT - MaterialShadow.OFFSET_RIGHT,
+            getHeight() - MaterialShadow.OFFSET_TOP - MaterialShadow.OFFSET_BOTTOM);
         super.paintComponent(g2);
     }
 }

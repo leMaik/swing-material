@@ -113,6 +113,7 @@ public class MaterialFrameWrapper {
             btnClose.setForeground(MaterialColor.WHITE);
             btnClose.addActionListener(this);
             btnClose.setFocusable(false);
+            btnClose.setBorderRadius(1);
             add(btnClose);
             btnClose.setVisible(true);
             btnMinimize = new MaterialButton();
@@ -122,6 +123,7 @@ public class MaterialFrameWrapper {
             btnMinimize.setText(String.valueOf(MaterialIcons.EXPAND_MORE));
             btnMinimize.addActionListener(this);
             btnMinimize.setFocusable(false);
+            btnMinimize.setBorderRadius(1);
             add(btnMinimize);
             btnMinimize.setVisible(true);
             btnMaximize = new MaterialButton();
@@ -131,6 +133,7 @@ public class MaterialFrameWrapper {
             btnMaximize.setText(String.valueOf(MaterialIcons.FULLSCREEN));
             btnMaximize.addActionListener(this);
             btnMaximize.setFocusable(false);
+            btnMaximize.setBorderRadius(1);
             add(btnMaximize);
             btnMaximize.setVisible(true);
             btnRestore = new MaterialButton();
@@ -140,6 +143,7 @@ public class MaterialFrameWrapper {
             btnRestore.setText(String.valueOf(MaterialIcons.FULLSCREEN_EXIT));
             btnRestore.addActionListener(this);
             btnRestore.setFocusable(false);
+            btnRestore.setBorderRadius(1);
             add(btnRestore);
             btnRestore.setVisible(false);
             titleLabel = new JLabel();

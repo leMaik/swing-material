@@ -1,5 +1,6 @@
 package de.craften.ui.swingmaterial;
 
+import static de.craften.ui.swingmaterial.MaterialTextField.HINT_OPACITY_MASK;
 import de.craften.ui.swingmaterial.fonts.Roboto;
 import javax.swing.*;
 import javax.swing.text.*;
@@ -168,6 +169,13 @@ public class MaterialFormattedTextField extends JFormattedTextField {
         this.accentColor = accentColor;
         floatingLabel.setAccent(accentColor);
     }
+    
+    @Override
+    public void setForeground(Color fg) {
+        super.setForeground(fg);
+        if (floatingLabel != null)
+            floatingLabel.updateForeground();
+    }
 
     @Override
     public void setText(String s) {
@@ -207,7 +215,7 @@ public class MaterialFormattedTextField extends JFormattedTextField {
 
         if (!getHint().isEmpty() && getText().length() == 0 && (getLabel().isEmpty() || isFocusOwner()) && floatingLabel.isFloatingAbove()) {
             g.setFont(Roboto.REGULAR.deriveFont(16f));
-            g2.setColor(MaterialColor.MIN_BLACK);
+            g2.setColor(new Color(getForeground().getRGB() & 0x00FFFFFF | HINT_OPACITY_MASK, true));
             FontMetrics metrics = g.getFontMetrics(g.getFont());
             g.drawString(getHint(), 0, metrics.getAscent() + 36);
         }

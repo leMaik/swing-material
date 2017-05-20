@@ -21,6 +21,8 @@ import java.util.concurrent.TimeUnit;
  * @see <a href="https://www.google.com/design/spec/components/text-fields.html">Text fields (Google design guidelines)</a>
  */
 public class MaterialTextField extends JTextField {
+    public static final int HINT_OPACITY_MASK = 0x77000000;
+    
     private FloatingLabel floatingLabel = new FloatingLabel(this);
     private Line line = new Line(this);
     private String hint = "";
@@ -114,6 +116,13 @@ public class MaterialTextField extends JTextField {
         this.accentColor = accentColor;
         floatingLabel.setAccent(accentColor);
     }
+    
+    @Override
+    public void setForeground(Color fg) {
+        super.setForeground(fg);
+        if (floatingLabel != null)
+            floatingLabel.updateForeground();
+    }
 
     @Override
     public void setText(String s) {
@@ -151,7 +160,7 @@ public class MaterialTextField extends JTextField {
 
         if (!getHint().isEmpty() && getText().isEmpty() && (getLabel().isEmpty() || isFocusOwner()) && floatingLabel.isFloatingAbove()) {
             g.setFont(Roboto.REGULAR.deriveFont(16f));
-            g2.setColor(MaterialColor.MIN_BLACK);
+            g2.setColor(new Color(getForeground().getRGB() & 0x00FFFFFF | HINT_OPACITY_MASK, true));
             FontMetrics metrics = g.getFontMetrics(g.getFont());
             g.drawString(getHint(), 0, metrics.getAscent() + 36);
         }
@@ -225,6 +234,16 @@ public class MaterialTextField extends JTextField {
             y = SafePropertySetter.animatableProperty(target, 36d);
             fontSize = SafePropertySetter.animatableProperty(target, 16d);
             color = SafePropertySetter.animatableProperty(target, MaterialColor.MIN_BLACK);
+            
+            updateForeground();
+        }
+        
+        public void updateForeground() {
+            if (target.getText().isEmpty()) {
+                color.setValue(new Color(target.getForeground().getRGB() & 0x00FFFFFF | HINT_OPACITY_MASK, true));
+            } else {
+                color.setValue(accentColor);
+            }
         }
 
         public Color getAccent() {
@@ -256,7 +275,7 @@ public class MaterialTextField extends JTextField {
                 targetColor = accentColor;
             } else {
                 if (target.getText().isEmpty()) {
-                    targetColor = MaterialColor.MIN_BLACK;
+                    targetColor = new Color(target.getForeground().getRGB() & 0x00FFFFFF | HINT_OPACITY_MASK, true);//MaterialColor.MIN_BLACK;
                 } else {
                     targetColor = accentColor; //MaterialColor.LIGHT_BLACK;
                 }

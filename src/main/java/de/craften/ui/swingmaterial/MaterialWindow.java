@@ -434,7 +434,7 @@ public class MaterialWindow extends JFrame {
                 Graphics2D g2d = (Graphics2D) g;
                 g.clearRect(0, 0, getWidth(), getHeight());
                 g2d.setComposite(AlphaComposite.SrcOver);
-                g2d.drawImage(shadow.render(getWidth(), getHeight(), 2, MaterialShadow.Type.SQUARE), 0, 0, null);
+                g2d.drawImage(shadow.render(getWidth(), getHeight(), 1, 2, MaterialShadow.Type.SQUARE), 0, 0, null);
 
                 g.setClip(new RoundRectangle2D.Float(MaterialShadow.OFFSET_LEFT, MaterialShadow.OFFSET_TOP,
                         getWidth() - MaterialShadow.OFFSET_LEFT - MaterialShadow.OFFSET_RIGHT,
