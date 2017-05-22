@@ -14,12 +14,12 @@ import java.awt.*;
  * However, there is a catch: shadows are kinda expensive to compute, as
  * Java2D relies on the CPU for anything other than images, so having a lot
  * of elements with a given elevation (and thus, a shadow) can reduce
- * performance when these elevations change because of the triggered animations.
+ * performance when these elevations change due to the triggered animations.
  * <p/>
  * Letting the components suggest a prefered size based on their contents is
  * still under development, so it is not advised to use your favorite
  * {@link LayoutManager} inside a {@code MaterialPanel} unless you set the
- * prefered, minimum and maximum size of each component by your self. Currently,
+ * prefered, minimum and maximum size of each component by yourself. Currently,
  * the prefereable approach to follow is overriding {@link #doLayout()} and
  * taking care of any arrangements by yourself.
  */
@@ -27,8 +27,9 @@ public class MaterialPanel extends JPanel {
     private final ElevationEffect elevation;
 
     /**
-     * Creates a new {@code MaterialPanel}. For the moment, this is the only
-     * supported constructor from JPanel.
+     * Creates a new {@code MaterialPanel}. These panels cast a shadow below
+     * them, although technically it is painted inside its borders. If you don't
+     * need a shadow to be casted from this panel, use a {@link JPanel} instead.
      */
     public MaterialPanel() {
         elevation = ElevationEffect.applyTo(this, 1);
@@ -85,5 +86,6 @@ public class MaterialPanel extends JPanel {
             getWidth() - MaterialShadow.OFFSET_LEFT - MaterialShadow.OFFSET_RIGHT,
             getHeight() - MaterialShadow.OFFSET_TOP - MaterialShadow.OFFSET_BOTTOM);
         super.paintComponent(g2);
+        g.setClip(null);
     }
 }
