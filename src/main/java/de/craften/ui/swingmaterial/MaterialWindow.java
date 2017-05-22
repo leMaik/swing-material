@@ -53,7 +53,7 @@ public class MaterialWindow extends JFrame {
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent componentEvent) {
-                setShape(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 3, 3));
+                setShape(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 6, 6));
             }
         });
         light();

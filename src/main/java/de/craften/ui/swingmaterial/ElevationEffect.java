@@ -20,7 +20,7 @@ public class ElevationEffect {
     protected int targetLevel = 0;
 
     protected final MaterialShadow shadow;
-    protected int borderRadius = 3;
+    protected int borderRadius = 2;
 
     private ElevationEffect(final JComponent component, int level) {
         this.target = component;

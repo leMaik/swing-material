@@ -22,7 +22,7 @@ public class MaterialButton extends JButton {
     private boolean isMouseOver = false;
     private Color rippleColor = Color.WHITE;
     private Cursor cursor = super.getCursor();
-    private int borderRadius = 3;
+    private int borderRadius = 2;
 
     /**
      * Creates a new button.
