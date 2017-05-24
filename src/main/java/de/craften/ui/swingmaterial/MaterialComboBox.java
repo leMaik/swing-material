@@ -99,9 +99,6 @@ public class MaterialComboBox<T> extends JComboBox<T> {
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        g.setColor(getBackground());
-        g.fillRect(0, 0, getWidth(), getHeight());
-
         g.setFont(Roboto.REGULAR.deriveFont(16f));
         g.setColor(getSelectedItem() == null ? Utils.applyAlphaMask(getForeground(), HINT_OPACITY_MASK):getForeground());
         FontMetrics metrics = g.getFontMetrics(g.getFont());
