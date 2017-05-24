@@ -415,10 +415,24 @@ public class MaterialWindow extends JFrame {
             setDeployed(true);
         }
 
+        /**
+         * Checks if this {@link ShadowPane} is deployed or not. When
+         * deployed, this panel will display continously a shadow below the
+         * window.
+         * @return {@code true} if this {@link ShadowPane} is deployed,
+         *         {@code false} otherwise.
+         */
         public boolean isDeployed() {
             return deployed;
         }
 
+        /**
+         * Allows to set if this {@link ShadowPane} is deployed or not. When
+         * deployed, this panel will display continously a shadow below the
+         * window.
+         * @param deployed a {@code boolean} being {@code true} to deploy the
+         *                 shadow, and {@code false} to hide it
+         */
         public void setDeployed(boolean deployed) {
             this.deployed = deployed;
             if (deployed) {
