@@ -1,5 +1,8 @@
 package de.craften.ui.swingmaterial;
 
+import static de.craften.ui.swingmaterial.MaterialTextField.HINT_OPACITY_MASK;
+import static de.craften.ui.swingmaterial.MaterialTextField.LINE_OPACITY_MASK;
+import de.craften.ui.swingmaterial.fonts.Roboto;
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
 import java.awt.*;
@@ -15,6 +18,7 @@ public class MaterialPasswordField extends JPasswordField {
     private MaterialTextField.FloatingLabel floatingLabel = new MaterialTextField.FloatingLabel(this);
     private MaterialTextField.Line line = new MaterialTextField.Line(this);
     private String hint = "";
+    private Color accentColor = MaterialColor.CYAN_500;
 
     /**
      * Creates a new password field.
@@ -23,6 +27,8 @@ public class MaterialPasswordField extends JPasswordField {
         setBorder(null);
         setFont(getFont().deriveFont(16f)); //use default font, Roboto's bullet doesn't work on some platforms (i.e. Mac)
         floatingLabel.setText("");
+        setOpaque(false);
+        setBackground(MaterialColor.TRANSPARENT);
 
         setCaret(new DefaultCaret() {
             @Override
@@ -35,7 +41,6 @@ public class MaterialPasswordField extends JPasswordField {
 
     /**
      * Gets the text of the floating label.
-     *
      * @return text of the floating label
      */
     public String getLabel() {
@@ -44,7 +49,6 @@ public class MaterialPasswordField extends JPasswordField {
 
     /**
      * Sets the text of the floating label.
-     *
      * @param label text of the floating label
      */
     public void setLabel(String label) {
@@ -53,8 +57,8 @@ public class MaterialPasswordField extends JPasswordField {
     }
 
     /**
-     * Gets the hint text.
-     *
+     * Gets the hint text. The hint text is displayed when this textfield is
+     * empty.
      * @return hint text
      */
     public String getHint() {
@@ -62,13 +66,40 @@ public class MaterialPasswordField extends JPasswordField {
     }
 
     /**
-     * Sets the hint text.
-     *
+     * Sets the hint text. The hint text is displayed when this textfield is
+     * empty.
      * @param hint hint text
      */
     public void setHint(String hint) {
         this.hint = hint;
         repaint();
+    }
+    
+    /**
+     * Gets the color the label changes to when this {@code materialTextField}
+     * is focused.
+     * @return the {@code "Color"} currently in use for accent. The default
+     *         value is {@link MaterialColor#CYAN_300}.
+     */
+    public Color getAccent() {
+        return accentColor;
+    }
+
+    /**
+     * Sets the color the label changes to when this {@code materialTextField}
+     * is focused. The default value is {@link MaterialColor#CYAN_300}.
+     * @param accentColor the {@code "Color"} that should be used for accent.
+     */
+    public void setAccent(Color accentColor) {
+        this.accentColor = accentColor;
+        floatingLabel.setAccent(accentColor);
+    }
+    
+    @Override
+    public void setForeground(Color fg) {
+        super.setForeground(fg);
+        if (floatingLabel != null)
+            floatingLabel.updateForeground();
     }
 
     @Override
@@ -109,17 +140,17 @@ public class MaterialPasswordField extends JPasswordField {
 
         if (!getHint().isEmpty() && getPassword().length == 0 && (getLabel().isEmpty() || isFocusOwner()) && floatingLabel.isFloatingAbove()) {
             g.setFont(Roboto.REGULAR.deriveFont(16f));
-            g2.setColor(MaterialColor.MIN_BLACK);
+            g2.setColor(Utils.applyAlphaMask(getForeground(), HINT_OPACITY_MASK));
             FontMetrics metrics = g.getFontMetrics(g.getFont());
             g.drawString(getHint(), 0, metrics.getAscent() + 36);
         }
 
         floatingLabel.paint(g2);
 
-        g2.setColor(MaterialColor.GREY_300);
+        g2.setColor(Utils.applyAlphaMask(getForeground(), LINE_OPACITY_MASK));
         g2.fillRect(0, getHeight() - 9, getWidth(), 1);
 
-        g2.setColor(MaterialColor.CYAN_500);
+        g2.setColor(accentColor);
         g2.fillRect((int) ((getWidth() - line.getWidth()) / 2), getHeight() - 10, (int) line.getWidth(), 2);
     }
 

@@ -1,5 +1,8 @@
 package de.craften.ui.swingmaterial;
 
+import static de.craften.ui.swingmaterial.MaterialTextField.HINT_OPACITY_MASK;
+import static de.craften.ui.swingmaterial.MaterialTextField.LINE_OPACITY_MASK;
+import de.craften.ui.swingmaterial.fonts.Roboto;
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.plaf.basic.BasicComboBoxUI;
@@ -7,6 +10,7 @@ import javax.swing.plaf.basic.BasicComboPopup;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.plaf.basic.ComboPopup;
 import java.awt.*;
+import java.awt.event.FocusEvent;
 
 /**
  * A Material Design combo box.
@@ -14,6 +18,10 @@ import java.awt.*;
  * @see <a href="https://www.google.com/design/spec/components/buttons.html#buttons-dropdown-buttons">Dropdown buttons (Google design guidelines)</a>
  */
 public class MaterialComboBox<T> extends JComboBox<T> {
+    private MaterialTextField.Line line = new MaterialTextField.Line(this);
+    private Color accentColor = MaterialColor.PINK_500;
+    private String hint = "";
+    
     public MaterialComboBox() {
         setModel(new DefaultComboBoxModel<T>());
         setRenderer(new FieldRenderer<T>(this));
@@ -27,9 +35,62 @@ public class MaterialComboBox<T> extends JComboBox<T> {
 
             @Override
             protected JButton createArrowButton() {
-                return null;
+                JButton button = new javax.swing.plaf.basic.BasicArrowButton(
+                        javax.swing.plaf.basic.BasicArrowButton.SOUTH,
+                        MaterialColor.TRANSPARENT,
+                        MaterialColor.TRANSPARENT,
+                        MaterialColor.TRANSPARENT,
+                        MaterialColor.TRANSPARENT);
+                button.setName("ComboBox.arrowButton");
+                return button;
             }
         });
+        setOpaque(false);
+        setBackground(MaterialColor.TRANSPARENT);
+    }
+    
+    /**
+     * Gets the color the label changes to when this {@code materialTextField}
+     * is focused.
+     * @return the {@code "Color"} currently in use for accent. The default
+     *         value is {@link MaterialColor#PINK_500}.
+     */
+    public Color getAccent() {
+        return accentColor;
+    }
+
+    /**
+     * Sets the color the label changes to when this {@code materialTextField}
+     * is focused. The default value is {@link MaterialColor#PINK_500}.
+     * @param accentColor the {@code "Color"} that should be used for accent.
+     */
+    public void setAccent(Color accentColor) {
+        this.accentColor = accentColor;
+    }
+
+    /**
+     * Gets the hint text. The hint text is displayed when the list inside this
+     * combo box is empty or no element has been selected yet.
+     * @return hint text
+     */
+    public String getHint() {
+        return hint;
+    }
+
+    /**
+     * Sets the hint text. The hint text is displayed when the list inside this
+     * combo box is empty or no element has been selected yet.
+     * @param hint hint text
+     */
+    public void setHint(String hint) {
+        this.hint = hint;
+        repaint();
+    }
+    
+    @Override
+    protected void processFocusEvent(FocusEvent e) {
+        super.processFocusEvent(e);
+        line.update();
     }
 
     @Override
@@ -38,19 +99,22 @@ public class MaterialComboBox<T> extends JComboBox<T> {
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        g.setColor(Color.WHITE);
-        g.fillRect(0, 0, getWidth(), getHeight());
-
         g.setFont(Roboto.REGULAR.deriveFont(16f));
-        g2.setColor(Color.BLACK);
+        g.setColor(getSelectedItem() == null ? Utils.applyAlphaMask(getForeground(), HINT_OPACITY_MASK):getForeground());
         FontMetrics metrics = g.getFontMetrics(g.getFont());
-        String text = getSelectedItem() != null ? getSelectedItem().toString() : "";
+        String text = getSelectedItem() != null ? getSelectedItem().toString() : (hint != null ? hint:"");
         g.drawString(text, 0, metrics.getAscent() + (getHeight() - metrics.getHeight()) / 2);
 
-        g2.setColor(MaterialColor.GREY_300);
+        g2.setColor(Utils.applyAlphaMask(getForeground(), LINE_OPACITY_MASK));
         g2.fillRect(0, getHeight() - 9, getWidth(), 1);
 
-        g2.fillPolygon(new int[]{getWidth() - 5, getWidth() - 10, getWidth() - 15}, new int[]{getHeight() - 24, getHeight() - 19, getHeight() - 24}, 3);
+        if (isFocusOwner()) {
+            g2.setColor(accentColor);
+        }
+        g2.fillPolygon(new int[]{getWidth() - 5, getWidth() - 10, getWidth() - 15}, new int[]{getHeight()/2 - 3, getHeight()/2 + 3, getHeight()/2 - 3}, 3);
+        
+        g2.setColor(accentColor);
+        g2.fillRect((int) ((getWidth() - line.getWidth()) / 2), getHeight() - 10, (int) line.getWidth(), 2);
     }
 
     public static class FieldRenderer<T> extends JComponent implements ListCellRenderer<T> {
@@ -81,17 +145,17 @@ public class MaterialComboBox<T> extends JComboBox<T> {
             g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
             if (mouseOver) {
-                g.setColor(MaterialColor.GREY_200);
+                g.setColor(Utils.isDark(comboBox.getBackground()) ? Utils.brighten(comboBox.getBackground()):Utils.darken(comboBox.getBackground()));
             } else {
-                g.setColor(Color.WHITE);
+                g.setColor(comboBox.getBackground());
             }
             g.fillRect(0, 0, getWidth(), getHeight());
 
             g.setFont(Roboto.REGULAR.deriveFont(15f));
             if (selected) {
-                g2.setColor(MaterialColor.PINK_500);
+                g2.setColor(comboBox.accentColor);
             } else {
-                g2.setColor(Color.BLACK);
+                g2.setColor(comboBox.getForeground());
             }
             FontMetrics metrics = g.getFontMetrics(g.getFont());
             g.drawString(text, 24, metrics.getAscent() + (getHeight() - metrics.getHeight()) / 2);
@@ -101,15 +165,15 @@ public class MaterialComboBox<T> extends JComboBox<T> {
     public static class Popup extends BasicComboPopup {
         public Popup(JComboBox combo) {
             super(combo);
-            setBackground(Color.WHITE);
-            setOpaque(false);
+            setBackground(combo.getBackground());
+            setOpaque(true);
             setBorderPainted(false);
         }
 
         @Override
         protected JScrollPane createScroller() {
             JScrollPane scroller = super.createScroller();
-            scroller.setVerticalScrollBar(new ScrollBar(Adjustable.VERTICAL));
+            scroller.setVerticalScrollBar(new ScrollBar(comboBox, Adjustable.VERTICAL));
             scroller.setBorder(new MatteBorder(16, 0, 16, 0, Color.WHITE));
             return scroller;
         }
@@ -127,7 +191,7 @@ public class MaterialComboBox<T> extends JComboBox<T> {
     }
 
     public static class ScrollBar extends JScrollBar {
-        public ScrollBar(int orientation) {
+        public ScrollBar(final JComboBox comboBox, int orientation) {
             super(orientation);
             setPreferredSize(new Dimension(5, 100));
 
@@ -141,7 +205,7 @@ public class MaterialComboBox<T> extends JComboBox<T> {
 
                 @Override
                 protected void paintTrack(Graphics g, JComponent c, Rectangle trackBounds) {
-                    g.setColor(Color.WHITE);
+                    g.setColor(comboBox.getBackground());
                     g.fillRect(trackBounds.x, trackBounds.y, trackBounds.width, trackBounds.height);
                 }
 
@@ -167,12 +231,15 @@ public class MaterialComboBox<T> extends JComboBox<T> {
                 @Override
                 protected void paintThumb(Graphics g, JComponent c, Rectangle thumbBounds) {
                     if (!thumbBounds.isEmpty() && this.scrollbar.isEnabled()) {
-                        int w = thumbBounds.width;
-                        int h = thumbBounds.height;
-                        g.translate(thumbBounds.x, thumbBounds.y);
+                        ((Graphics2D)g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                                RenderingHints.VALUE_ANTIALIAS_ON);
+                        boolean isVertical = ScrollBar.this.getOrientation()
+                                == Adjustable.VERTICAL;
                         g.setColor(MaterialColor.GREY_500);
-                        g.fillRect(0, 0, w, h);
-                        g.translate(-thumbBounds.x, -thumbBounds.y);
+                        g.fillRoundRect(thumbBounds.x, thumbBounds.y,
+                                thumbBounds.width, thumbBounds.height,
+                                isVertical ? thumbBounds.width:thumbBounds.height,
+                                isVertical ? thumbBounds.width:thumbBounds.height);
                     }
                 }
 

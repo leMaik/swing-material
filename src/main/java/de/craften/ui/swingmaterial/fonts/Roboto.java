@@ -1,4 +1,4 @@
-package de.craften.ui.swingmaterial;
+package de.craften.ui.swingmaterial.fonts;
 
 import java.awt.*;
 import java.io.IOException;

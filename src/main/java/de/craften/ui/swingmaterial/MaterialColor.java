@@ -279,6 +279,7 @@ public class MaterialColor {
     public static final Color GREY_600 = Color.decode("#757575");
     public static final Color GREY_700 = Color.decode("#616161");
     public static final Color GREY_800 = Color.decode("#424242");
+    public static final Color GREY_850 = Color.decode("#313131");
     public static final Color GREY_900 = Color.decode("#212121");
 
     public static final Color BLACK = Color.BLACK;

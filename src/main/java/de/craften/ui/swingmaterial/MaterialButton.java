@@ -1,5 +1,6 @@
 package de.craften.ui.swingmaterial;
 
+import de.craften.ui.swingmaterial.fonts.Roboto;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
@@ -21,6 +22,7 @@ public class MaterialButton extends JButton {
     private boolean isMouseOver = false;
     private Color rippleColor = Color.WHITE;
     private Cursor cursor = super.getCursor();
+    private int borderRadius = 2;
 
     /**
      * Creates a new button.
@@ -70,6 +72,7 @@ public class MaterialButton extends JButton {
      * Gets the type of this button.
      *
      * @return the type of this button
+     * @see Type
      */
     public Type getType() {
         return type;
@@ -79,15 +82,37 @@ public class MaterialButton extends JButton {
      * Sets the type of this button.
      *
      * @param type the type of this button
+     * @see Type
      */
     public void setType(Type type) {
         this.type = type;
         repaint();
     }
+    
+    /**
+     * Sets the background color of this button.
+     * <p>
+     * Keep on mind that setting a background color in a Material component like
+     * this will also set the foreground color to either white or black and the
+     * ripple color to a brighter or darker shade of the color, depending of how
+     * bright or dark is the chosen background color. If you want to use a
+     * custom foreground color and ripple color, ensure the background color has
+     * been set first.
+     * <p>
+     * <b>NOTE:</b> It is up to the look and feel to honor this property, some
+     * may choose to ignore it. To avoid any conflicts, using the
+     * <a href="https://docs.oracle.com/javase/7/docs/api/javax/swing/plaf/metal/package-summary.html">
+     * Metal Look and Feel</a> is recommended.
+     */
+    @Override
+    public void setBackground(Color bg) {
+        super.setBackground(bg);
+        setForeground(Utils.isDark(bg) ? MaterialColor.WHITE:MaterialColor.BLACK);
+        setRippleColor(Utils.isDark(bg) ? MaterialColor.WHITE:Utils.darken(Utils.darken(bg)));
+    }
 
     /**
      * Gets the ripple color.
-     *
      * @return the ripple color
      */
     public Color getRippleColor() {
@@ -96,11 +121,29 @@ public class MaterialButton extends JButton {
 
     /**
      * Sets the ripple color. You should only do this for flat buttons.
-     *
      * @param rippleColor the ripple color
      */
     public void setRippleColor(Color rippleColor) {
         this.rippleColor = rippleColor;
+    }
+
+    /**
+     * Gets the current border radius of this button.
+     * @return the current border radius of this button, in pixels.
+     */
+    public int getBorderRadius() {
+        return borderRadius;
+    }
+
+    /**
+     * Sets the border radius of this button. You can define a custom radius in
+     * order to get some rounded corners in your button, making it look like a
+     * pill or even a circular action button.
+     * @param borderRadius the new border radius of this button, in pixels.
+     */
+    public void setBorderRadius(int borderRadius) {
+        this.borderRadius = borderRadius;
+        elevation.setBorderRadius(borderRadius);
     }
 
     @Override
@@ -154,16 +197,16 @@ public class MaterialButton extends JButton {
 
         if (isEnabled()) {
             g2.setColor(getBackground());
-            g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - offset_lr, getHeight() - offset_td, 3, 3));
+            g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - offset_lr, getHeight() - offset_td, borderRadius*2, borderRadius*2));
 
             g2.setColor(new Color(rippleColor.getRed() / 255f, rippleColor.getBlue() / 255f, rippleColor.getBlue() / 255f, 0.12f));
             if ((type == Type.FLAT && isMouseOver) || isFocusOwner()) {
-                g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - offset_lr, getHeight() - offset_td, 3, 3));
+                g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - offset_lr, getHeight() - offset_td, borderRadius*2, borderRadius*2));
             }
         } else {
             Color bg = getBackground();
             g2.setColor(new Color(bg.getRed() / 255f, bg.getGreen() / 255f, bg.getBlue() / 255f, 0.6f));
-            g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - offset_lr, getHeight() - offset_td, 3, 3));
+            g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - offset_lr, getHeight() - offset_td, borderRadius*2, borderRadius*2));
         }
 
         FontMetrics metrics = g.getFontMetrics(getFont());
@@ -179,7 +222,7 @@ public class MaterialButton extends JButton {
         g2.drawString(getText().toUpperCase(), x, y);
 
         if (isEnabled()) {
-            g2.setClip(new RoundRectangle2D.Float(0, 0, getWidth() - offset_lr, getHeight() - offset_td, 3, 3));
+            g2.setClip(new RoundRectangle2D.Float(0, 0, getWidth() - offset_lr, getHeight() - offset_td, Math.max(borderRadius*2 - 4, 0), Math.max(borderRadius*2 - 4, 0)));
             g2.setColor(rippleColor);
             ripple.paint(g2);
         }
@@ -195,16 +238,16 @@ public class MaterialButton extends JButton {
      * Button types.
      */
     public enum Type {
-        /**
-         * A default button.
-         */
+        /** A default button. */
         DEFAULT,
         /**
-         * A raised button. Raised buttons have shadow even if they are not focused.
+         * A raised button. Raised buttons have a shadow even if they are not
+         * focused.
          */
         RAISED,
         /**
-         * A flat button. Flat buttons don't have shadows and are typically transparent.
+         * A flat button. Flat buttons don't have shadows and are typically
+         * transparent.
          */
         FLAT
     }
