@@ -90,8 +90,8 @@ public class MaterialWindow extends JFrame {
      * @return this window
      */
     public MaterialWindow light() {
-        getContentPane().setBackground(MaterialColor.WHITE);
-        getContentPane().setForeground(MaterialColor.GREY_900);
+        getContentPane().setBackground(MaterialColor.GREY_50);
+        getContentPane().setForeground(MaterialColor.GREY_800);
         return this;
     }
     
@@ -99,7 +99,7 @@ public class MaterialWindow extends JFrame {
      * {@inheritDoc}
      * <p/>
      * <b>NOTE:</b> If this window is casting a shadow, calling this method
-     * might provide unnacurate results unless you take into account the margin
+     * might provide inaccurate results unless you take into account the margin
      * constants found in {@link MaterialShadow}. In order to make things easier
      * to handle, it is preferable to use {@link #setWindowLocation(int, int)}.
      * @param x the <i>x</i>-coordinate of the new location's
@@ -133,7 +133,7 @@ public class MaterialWindow extends JFrame {
      * {@inheritDoc}
      * <p/>
      * <b>NOTE:</b> If this window is casting a shadow, calling this method
-     * might provide unnacurate results unless you take into account the margin
+     * might provide inaccurate results unless you take into account the margin
      * constants found in {@link MaterialShadow}. In order to make things easier
      * to handle, it is preferable to use {@link #setWindowLocation(java.awt.Point)}.
      * @param p the point defining the top-left corner
@@ -161,7 +161,7 @@ public class MaterialWindow extends JFrame {
      * {@inheritDoc}
      * <p/>
      * <b>NOTE:</b> If this window is casting a shadow, calling this method
-     * might provide unnacurate results unless you take into account the margin
+     * might provide inaccurate results unless you take into account the margin
      * constants found in {@link MaterialShadow}. In order to make things easier
      * to handle, it is preferable to use {@link #getXLocation()}.
      * @deprecated use {@link #getXLocation()} instead.
@@ -186,7 +186,7 @@ public class MaterialWindow extends JFrame {
      * {@inheritDoc}
      * <p/>
      * <b>NOTE:</b> If this window is casting a shadow, calling this method
-     * might provide unnacurate results unless you take into account the margin
+     * might provide inaccurate results unless you take into account the margin
      * constants found in {@link MaterialShadow}. In order to make things easier
      * to handle, it is preferable to use {@link #getYLocation()}.
      * @deprecated use {@link #getYLocation()} instead.
@@ -211,7 +211,7 @@ public class MaterialWindow extends JFrame {
      * {@inheritDoc}
      * <p/>
      * <b>NOTE:</b> If this window is casting a shadow, calling this method
-     * might provide unnacurate results unless you take into account the margin
+     * might provide inaccurate results unless you take into account the margin
      * constants found in {@link MaterialShadow}. In order to make things easier
      * to handle, it is preferable to use {@link #getWindowLocation()}.
      * @deprecated use {@link #getWindowLocation()} instead.
@@ -236,7 +236,7 @@ public class MaterialWindow extends JFrame {
      * {@inheritDoc}
      * <p/>
      * <b>NOTE:</b> If this window is casting a shadow, calling this method
-     * might provide unnacurate results unless you take into account the margin
+     * might provide inaccurate results unless you take into account the margin
      * constants found in {@link MaterialShadow}. In order to make things easier
      * to handle, it is preferable to use {@link #getWindowWidth()}.
      * @deprecated use {@link #getWindowWidth()} instead.
@@ -262,7 +262,7 @@ public class MaterialWindow extends JFrame {
      * {@inheritDoc}
      * <p/>
      * <b>NOTE:</b> If this window is casting a shadow, calling this method
-     * might provide unnacurate results unless you take into account the margin
+     * might provide inaccurate results unless you take into account the margin
      * constants found in {@link MaterialShadow}. In order to make things easier
      * to handle, it is preferable to use {@link #getWindowHeight()}.
      * @deprecated use {@link #getWindowHeight()} instead.
@@ -288,7 +288,7 @@ public class MaterialWindow extends JFrame {
      * {@inheritDoc}
      * <p/>
      * <b>NOTE:</b> If this window is casting a shadow, calling this method
-     * might provide unnacurate results unless you take into account the margin
+     * might provide inaccurate results unless you take into account the margin
      * constants found in {@link MaterialShadow}. In order to make things easier
      * to handle, it is preferable to use {@link #setWindowSize(int, int)}.
      * @param width  the new width of this component in pixels
@@ -326,7 +326,7 @@ public class MaterialWindow extends JFrame {
      * {@inheritDoc}
      * <p/>
      * <b>NOTE:</b> If this window is casting a shadow, calling this method
-     * might provide unnacurate results unless you take into account the margin
+     * might provide inaccurate results unless you take into account the margin
      * constants found in {@link MaterialShadow}. In order to make things easier
      * to handle, it is preferable to use {@link #setWindowSize(java.awt.Dimension)}.
      * @param d the dimension specifying the new size of this component
@@ -353,7 +353,7 @@ public class MaterialWindow extends JFrame {
      * {@inheritDoc}
      * <p/>
      * <b>NOTE:</b> If this window is casting a shadow, calling this method
-     * might provide unnacurate results unless you take into account the margin
+     * might provide inaccurate results unless you take into account the margin
      * constants found in {@link MaterialShadow}. In order to make things easier
      * to handle, it is preferable to use {@link #getWindowSize()}.
      * @return a {@link Dimension} object that indicates the size of this window

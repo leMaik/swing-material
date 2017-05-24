@@ -9,8 +9,7 @@ import javax.swing.JPanel;
  * An extension of {@link MaterialWindow} with a classic title bar, control
  * buttons and the ability to drag, minimize and maximize the window as the user
  * wishes. Specially recommended when you want your application to behave like
- * common desktop apps. If you are looking for a behavior more like mobile apps,
- * try {@code MaterialAppFrame}.
+ * common desktop apps.
  * @author DragShot
  */
 public class MaterialFrame extends MaterialWindow {

@@ -1,6 +1,7 @@
 package de.craften.ui.swingmaterial;
 
 import static de.craften.ui.swingmaterial.MaterialTextField.HINT_OPACITY_MASK;
+import static de.craften.ui.swingmaterial.MaterialTextField.LINE_OPACITY_MASK;
 import de.craften.ui.swingmaterial.fonts.Roboto;
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
@@ -139,14 +140,14 @@ public class MaterialPasswordField extends JPasswordField {
 
         if (!getHint().isEmpty() && getPassword().length == 0 && (getLabel().isEmpty() || isFocusOwner()) && floatingLabel.isFloatingAbove()) {
             g.setFont(Roboto.REGULAR.deriveFont(16f));
-            g2.setColor(new Color(getForeground().getRGB() & 0x00FFFFFF | HINT_OPACITY_MASK, true));
+            g2.setColor(Utils.applyAlphaMask(getForeground(), HINT_OPACITY_MASK));
             FontMetrics metrics = g.getFontMetrics(g.getFont());
             g.drawString(getHint(), 0, metrics.getAscent() + 36);
         }
 
         floatingLabel.paint(g2);
 
-        g2.setColor(MaterialColor.GREY_300);
+        g2.setColor(Utils.applyAlphaMask(getForeground(), LINE_OPACITY_MASK));
         g2.fillRect(0, getHeight() - 9, getWidth(), 1);
 
         g2.setColor(accentColor);

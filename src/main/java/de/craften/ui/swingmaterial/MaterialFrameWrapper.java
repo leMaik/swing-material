@@ -22,8 +22,6 @@ import javax.swing.JPanel;
  * 
  * @author DragShot
  */
-//The current implementation is based on Baltimore for AWT, an experimental
-//project I worked on some time ago.
 public class MaterialFrameWrapper {
     /** The frame this object wraps around. */
     private MaterialFrame frame;
@@ -66,6 +64,10 @@ public class MaterialFrameWrapper {
         return titleBar.getBackground();
     }
     
+    /**
+     * This method is called by the {@link MaterialFrame} being wrapped when the
+     * title in the title bar needs to be updated.
+     */
     public void updateTitle() {
         titleBar.setTitle(frame.getTitle());
     }
@@ -160,6 +162,10 @@ public class MaterialFrameWrapper {
             setBackground(MaterialColor.INDIGO_500);
         }
         
+        /**
+         * Sets the title of this {@link MaterialTitleBar}.
+         * @param title the title to display
+         */
         public void setTitle(String title) {
             titleLabel.setText(title);
         }
@@ -200,12 +206,12 @@ public class MaterialFrameWrapper {
         
         @Override
         public void doLayout() {
-            boolean max = (control.getFrameState() & Frame.MAXIMIZED_BOTH) == Frame.MAXIMIZED_BOTH;
+            boolean max = (frame.getExtendedState() & Frame.MAXIMIZED_BOTH) == Frame.MAXIMIZED_BOTH;
             int hpad = MaterialShadow.OFFSET_LEFT + MaterialShadow.OFFSET_RIGHT;
             int vpad = MaterialShadow.OFFSET_TOP + MaterialShadow.OFFSET_BOTTOM;
             btnClose.setBounds(this.getWidth() - 48 - MaterialShadow.OFFSET_LEFT - 10,
                 0 - MaterialShadow.OFFSET_TOP, 48 + hpad, 24 + vpad);
-            if (control.isFrameResizable()) {
+            if (frame.isResizable()) {
                 if (max) {
                     btnRestore.setBounds(this.getWidth() - 78 - MaterialShadow.OFFSET_LEFT - 10,
                         0 - MaterialShadow.OFFSET_TOP, 30 + hpad, 24 + vpad);
@@ -245,8 +251,8 @@ public class MaterialFrameWrapper {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
-                        if (control.isFrameResizable()) {
-                            if ((control.getFrameState() & Frame.MAXIMIZED_BOTH) == Frame.MAXIMIZED_BOTH) {
+                        if (frame.isResizable()) {
+                            if ((frame.getExtendedState() & Frame.MAXIMIZED_BOTH) == Frame.MAXIMIZED_BOTH) {
                                 control.restore();
                             } else {
                                 control.maximize();
@@ -258,7 +264,7 @@ public class MaterialFrameWrapper {
                 @Override
                 public void mousePressed(MouseEvent e) {
                     if (e.getButton() == MouseEvent.BUTTON1
-                        && (control.getFrameState() & Frame.MAXIMIZED_BOTH) != Frame.MAXIMIZED_BOTH) {
+                        && (frame.getExtendedState() & Frame.MAXIMIZED_BOTH) != Frame.MAXIMIZED_BOTH) {
                         moving = true;
                         movs[1][0] = e.getXOnScreen();
                         movs[1][1] = e.getYOnScreen();
@@ -268,12 +274,13 @@ public class MaterialFrameWrapper {
                 @Override
                 public void mouseReleased(MouseEvent e) {
                     if (e.getButton() == MouseEvent.BUTTON1
-                        && (control.getFrameState() & Frame.MAXIMIZED_BOTH) != Frame.MAXIMIZED_BOTH) {
+                        && (frame.getExtendedState() & Frame.MAXIMIZED_BOTH) != Frame.MAXIMIZED_BOTH) {
                         moving = false;
                     }
                 }
 
                 @Override
+                @SuppressWarnings("deprecated")
                 public void mouseDragged(MouseEvent e){
                     if (moving) {
                         System.arraycopy(movs[1], 0, movs[0], 0, 2);
@@ -359,14 +366,6 @@ public class MaterialFrameWrapper {
          */
         public void close(){
             frame.processWindowEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-        }
-        
-        public int getFrameState() {
-            return frame.getExtendedState();
-        }
-        
-        public boolean isFrameResizable() {
-            return frame.isResizable();
         }
     }
 }

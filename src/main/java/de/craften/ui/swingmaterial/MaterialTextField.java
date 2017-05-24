@@ -21,7 +21,8 @@ import java.util.concurrent.TimeUnit;
  * @see <a href="https://www.google.com/design/spec/components/text-fields.html">Text fields (Google design guidelines)</a>
  */
 public class MaterialTextField extends JTextField {
-    public static final int HINT_OPACITY_MASK = 0x77000000;
+    public static final int HINT_OPACITY_MASK = 0x99000000;
+    public static final int LINE_OPACITY_MASK = 0x66000000;
     
     private FloatingLabel floatingLabel = new FloatingLabel(this);
     private Line line = new Line(this);
@@ -160,14 +161,14 @@ public class MaterialTextField extends JTextField {
 
         if (!getHint().isEmpty() && getText().isEmpty() && (getLabel().isEmpty() || isFocusOwner()) && floatingLabel.isFloatingAbove()) {
             g.setFont(Roboto.REGULAR.deriveFont(16f));
-            g2.setColor(new Color(getForeground().getRGB() & 0x00FFFFFF | HINT_OPACITY_MASK, true));
+            g2.setColor(Utils.applyAlphaMask(getForeground(), HINT_OPACITY_MASK));
             FontMetrics metrics = g.getFontMetrics(g.getFont());
             g.drawString(getHint(), 0, metrics.getAscent() + 36);
         }
 
         floatingLabel.paint(g2);
 
-        g2.setColor(MaterialColor.GREY_300);
+        g2.setColor(Utils.applyAlphaMask(getForeground(), LINE_OPACITY_MASK));
         g2.fillRect(0, getHeight() - 9, getWidth(), 1);
 
         g2.setColor(accentColor);
@@ -239,11 +240,7 @@ public class MaterialTextField extends JTextField {
         }
         
         public void updateForeground() {
-            if (target.getText().isEmpty()) {
-                color.setValue(new Color(target.getForeground().getRGB() & 0x00FFFFFF | HINT_OPACITY_MASK, true));
-            } else {
-                color.setValue(accentColor);
-            }
+            color.setValue(Utils.applyAlphaMask(target.getForeground(), HINT_OPACITY_MASK));
         }
 
         public Color getAccent() {
@@ -271,14 +268,10 @@ public class MaterialTextField extends JTextField {
                 builder.addTarget(SafePropertySetter.getTarget(y, y.getValue(), targetY));
             }
             Color targetColor;
-            if (target.getText().isEmpty() && target.isFocusOwner()) {
+            if (target.isFocusOwner()) {
                 targetColor = accentColor;
             } else {
-                if (target.getText().isEmpty()) {
-                    targetColor = new Color(target.getForeground().getRGB() & 0x00FFFFFF | HINT_OPACITY_MASK, true);//MaterialColor.MIN_BLACK;
-                } else {
-                    targetColor = accentColor; //MaterialColor.LIGHT_BLACK;
-                }
+                targetColor = Utils.applyAlphaMask(target.getForeground(), HINT_OPACITY_MASK);
             }
             if (!targetColor.equals(color.getValue())) {
                 builder.addTarget(SafePropertySetter.getTarget(color, color.getValue(), targetColor));

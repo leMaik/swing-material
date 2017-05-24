@@ -105,9 +105,7 @@ public class Utils {
     public static boolean isTranslucencySupported(){
         boolean nativeTrans;
         if (System.getProperty("java.version").contains("1.6")) {
-            System.err.println("Per-pixel translucency is currently not "
-                    + "supported.\nPlease upgrade your JRE to at least Java 7 "
-                    + "to support this feature.");
+            //Don't even bother: window translucency doesn't exist before JDK 1.7
             nativeTrans = false;
         } else {
             nativeTrans = GraphicsEnvironment
@@ -166,6 +164,17 @@ public class Utils {
     
     private static int wrapU8B(int i) {
         return Math.min(255, Math.max(0, i));
+    }
+    
+    /**
+     * Utilitary method for getting a copy of a provided Color but using an
+     * specific opacity mask. Intented for use within the library.
+     * @param color   the color to use as base
+     * @param bitMask the bitmask to apply, where the bits 25 to 32 are used
+     * @return a copy of the given color, with a modified alpha value
+     */
+    public static Color applyAlphaMask(Color color, int bitMask) {
+        return new Color(color.getRGB() & 0x00FFFFFF | (bitMask & 0xFF000000), true);
     }
     
     //Uncomment this block in order to test #isDark() against all the color constants in Material Color
